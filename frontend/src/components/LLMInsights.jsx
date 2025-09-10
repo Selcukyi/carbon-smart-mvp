@@ -54,7 +54,7 @@ export default function LLMInsights() {
                   <h3>{executiveSummary?.title || "Executive Summary"}</h3>
                   <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
                     <button
-                      onClick={loadLLMInsights}
+                      onClick={() => {}}
                       disabled={loading}
                       className="btn btn-sm"
                       style={{
