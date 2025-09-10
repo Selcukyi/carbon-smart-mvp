@@ -149,11 +149,11 @@ export const mockTrend = [
 ];
 
 export const mockTopActivities = [
-  { name: "Natural Gas Consumption", emissions: 800, percentage: 28.1 },
-  { name: "Electricity Usage", emissions: 1200, percentage: 42.2 },
-  { name: "Business Travel", emissions: 300, percentage: 10.5 },
-  { name: "Waste Disposal", emissions: 147, percentage: 5.2 },
-  { name: "Vehicle Fleet", emissions: 400, percentage: 14.0 }
+  { activity: "Natural Gas Consumption", entity: "Manufacturing Division", facility: "Factory A", scope: "Scope 1", co2e: 800, period: "2025-Q3" },
+  { activity: "Electricity Usage", entity: "Manufacturing Division", facility: "Factory A", scope: "Scope 2", co2e: 1200, period: "2025-Q3" },
+  { activity: "Business Travel", entity: "Services Division", facility: "Office Complex", scope: "Scope 3", co2e: 300, period: "2025-Q3" },
+  { activity: "Waste Disposal", entity: "Manufacturing Division", facility: "Factory B", scope: "Scope 3", co2e: 147, period: "2025-Q3" },
+  { activity: "Vehicle Fleet", entity: "Services Division", facility: "Office Complex", scope: "Scope 1", co2e: 400, period: "2025-Q3" }
 ];
 
 // Upload page mock data
@@ -175,19 +175,22 @@ export const mockBudgetScenarios = [
 
 // LLM Insights mock data
 export const mockLLMInsights = {
-  executiveSummary: "Total emissions of 2,847 tCO₂e detected. EU ETS compliance status needs evaluation.",
+  executiveSummary: "Total emissions of 2,847 tCO₂e detected. EU ETS compliance status needs evaluation. Current carbon intensity is 0.45 tCO₂e/€M, showing moderate efficiency. Immediate action required for EU ETS compliance.",
+  financialImpact: "€47,000 additional cost for exceeding EU ETS allowances",
   recommendations: [
     {
       title: "Energy Efficiency",
       description: "Implement LED lighting and smart HVAC systems",
       impact: "High",
-      cost: "Medium"
+      cost: "Medium",
+      annualSavings: "€25,000"
     },
     {
       title: "Renewable Energy",
       description: "Switch to 100% renewable electricity",
       impact: "Very High",
-      cost: "High"
+      cost: "High",
+      annualSavings: "€35,000"
     }
   ],
   riskAnalysis: [

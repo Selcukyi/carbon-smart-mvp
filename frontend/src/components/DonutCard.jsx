@@ -3,11 +3,13 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recha
 const COLORS = ["#16a34a", "#22c55e", "#86efac"]; // greens
 
 export default function DonutCard({ data }) {
+  console.log("DonutCard data:", data);
   const chartData = data.data || [
     { name: "Scope 1", value: 1200 },
     { name: "Scope 2", value: 1200 },
     { name: "Scope 3", value: 447 },
   ];
+  console.log("DonutCard chartData:", chartData);
   return (
     <div className="chart-card">
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
