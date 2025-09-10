@@ -5,5 +5,5 @@ router = APIRouter()
 
 @router.get("/")
 def health_root():
-    return {"status": "ok", "service": "carbon-mvp"}
+    return {"status": "ok", "service": "carbonlens"}
 

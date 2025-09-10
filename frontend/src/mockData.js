@@ -3,7 +3,7 @@
 export const mockEntities = [
   {
     id: 1,
-    name: "CarbonSmart Group",
+    name: "CarbonLens Group",
     type: "GROUP",
     parentId: null,
     children: [
@@ -69,7 +69,7 @@ export const mockActivities = [
 export const mockAllowances = [
   { 
     id: 1, 
-    entity: "CarbonSmart Group", 
+    entity: "CarbonLens Group", 
     facility: "Headquarters", 
     allocated: 2800, 
     used: 2847, 

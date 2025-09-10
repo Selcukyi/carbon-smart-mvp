@@ -1,4 +1,4 @@
-# 🌍 CarbonSmart MVP
+# 🔍 CarbonLens
 
 A comprehensive carbon emission management platform with AI-powered insights, EU ETS compliance, and real-time analytics.
 

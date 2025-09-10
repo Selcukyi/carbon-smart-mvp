@@ -29,8 +29,8 @@ export const API_ENDPOINTS = {
 
 // App configuration
 export const APP_CONFIG = {
-  NAME: 'CarbonSmart MVP',
+  NAME: 'CarbonLens',
   VERSION: '1.0.0',
   DESCRIPTION: 'AI-powered carbon emission management platform',
-  SUPPORT_EMAIL: 'support@carbonmvp.com',
+  SUPPORT_EMAIL: 'support@carbonlens.com',
 };

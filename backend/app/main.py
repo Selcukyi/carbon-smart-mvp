@@ -12,7 +12,7 @@ from .routes import llm as llm_routes
 
 
 def create_app() -> FastAPI:
-    app = FastAPI(title="Carbon MVP", version="0.1.0")
+    app = FastAPI(title="CarbonLens API", version="1.0.0")
 
     app.add_middleware(
         CORSMiddleware,
