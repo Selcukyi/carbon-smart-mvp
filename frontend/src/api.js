@@ -1,4 +1,4 @@
-import { BACKEND_URL, FEATURE_FLAGS } from "./lib/config.js";
+import { BACKEND_URL, FEATURE_FLAGS } from "./config.js";
 import { mockLLMInsights } from "./mockData.js";
 
 async function httpGet(path) {
