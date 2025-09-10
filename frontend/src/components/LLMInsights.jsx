@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { api } from "../lib/api.js";
-import { mockLLMInsights } from "../lib/mockData.js";
+import { mockLLMInsights } from "../mockData.js";
 
 export default function LLMInsights() {
   const [insights, setInsights] = useState(mockLLMInsights);

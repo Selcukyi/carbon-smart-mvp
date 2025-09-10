@@ -5,7 +5,7 @@ import BarCard from "../components/BarCard.jsx";
 import LineCard from "../components/LineCard.jsx";
 import TableCard from "../components/TableCard.jsx";
 import LLMInsights from "../components/LLMInsights.jsx";
-import { mockKPIs, mockDonut, mockBarCategories, mockTrend, mockTopActivities } from "../lib/mockData.js";
+import { mockKPIs, mockDonut, mockBarCategories, mockTrend, mockTopActivities } from "../mockData.js";
 import { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext";
 
