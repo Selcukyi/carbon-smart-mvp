@@ -1,6 +1,6 @@
 import NavSidebar from "../components/NavSidebar.jsx";
 import UploadForm from "../components/UploadForm.jsx";
-import { mockEmissionFactors } from "../lib/mock.js";
+import { mockEmissionFactors } from "../lib/mockData.js";
 import { useAuth } from "../contexts/AuthContext";
 
 export default function Upload() {

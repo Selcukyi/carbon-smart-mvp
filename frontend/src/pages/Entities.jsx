@@ -1,5 +1,5 @@
 import NavSidebar from "../components/NavSidebar.jsx";
-import { mockEntities } from "../lib/mock.js";
+import { mockEntities } from "../lib/mockData.js";
 import { useAuth } from "../contexts/AuthContext";
 
 export default function Entities() {

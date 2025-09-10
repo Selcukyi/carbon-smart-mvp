@@ -1,5 +1,5 @@
 import NavSidebar from "../components/NavSidebar.jsx";
-import { mockAllowances, mockBudgetScenarios } from "../lib/mock.js";
+import { mockAllowances, mockBudgetScenarios } from "../lib/mockData.js";
 import { useAuth } from "../contexts/AuthContext";
 
 export default function Allowances() {
