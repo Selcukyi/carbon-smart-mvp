@@ -67,9 +67,36 @@ export const mockActivities = [
 ];
 
 export const mockAllowances = [
-  { id: 1, entityId: 1, entityName: "CarbonSmart Group", balance: 2800, used: 2847 },
-  { id: 2, entityId: 2, entityName: "Manufacturing Division", balance: 1500, used: 1200 },
-  { id: 3, entityId: 5, entityName: "Services Division", balance: 800, used: 600 }
+  { 
+    id: 1, 
+    entity: "CarbonSmart Group", 
+    facility: "Headquarters", 
+    allocated: 2800, 
+    used: 2847, 
+    remaining: -47, 
+    price: 85.50, 
+    value: 243019.50 
+  },
+  { 
+    id: 2, 
+    entity: "Manufacturing Division", 
+    facility: "Factory A", 
+    allocated: 1500, 
+    used: 1200, 
+    remaining: 300, 
+    price: 85.50, 
+    value: 102600 
+  },
+  { 
+    id: 3, 
+    entity: "Services Division", 
+    facility: "Office Complex", 
+    allocated: 800, 
+    used: 600, 
+    remaining: 200, 
+    price: 85.50, 
+    value: 51300 
+  }
 ];
 
 export const mockFactors = [
@@ -168,9 +195,33 @@ export const mockEmissionFactors = [
 
 // Allowances page mock data
 export const mockBudgetScenarios = [
-  { id: 1, name: "Conservative", reduction: 5, cost: 50000, feasibility: "High" },
-  { id: 2, name: "Moderate", reduction: 15, cost: 150000, feasibility: "Medium" },
-  { id: 3, name: "Aggressive", reduction: 30, cost: 400000, feasibility: "Low" }
+  { 
+    id: 1, 
+    scenario: "Conservative", 
+    year: "2025", 
+    emissions: 2700, 
+    cost: 50000, 
+    description: "Gradual reduction approach with minimal disruption to operations",
+    feasibility: "High" 
+  },
+  { 
+    id: 2, 
+    scenario: "Moderate", 
+    year: "2025", 
+    emissions: 2400, 
+    cost: 150000, 
+    description: "Balanced approach with moderate investment in efficiency improvements",
+    feasibility: "Medium" 
+  },
+  { 
+    id: 3, 
+    scenario: "Aggressive", 
+    year: "2025", 
+    emissions: 2000, 
+    cost: 400000, 
+    description: "Ambitious reduction target requiring significant capital investment",
+    feasibility: "Low" 
+  }
 ];
 
 // LLM Insights mock data
