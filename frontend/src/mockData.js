@@ -132,21 +132,20 @@ export const mockDonut = {
 };
 
 export const mockBarCategories = [
-  { name: "Jan", scope1: 100, scope2: 95, scope3: 35 },
-  { name: "Feb", scope1: 105, scope2: 98, scope3: 38 },
-  { name: "Mar", scope1: 110, scope2: 102, scope3: 42 },
-  { name: "Apr", scope1: 115, scope2: 105, scope3: 45 },
-  { name: "May", scope1: 120, scope2: 108, scope3: 48 },
-  { name: "Jun", scope1: 125, scope2: 112, scope3: 52 }
+  { name: "Natural Gas", value: 800 },
+  { name: "Electricity", value: 1200 },
+  { name: "Business Travel", value: 300 },
+  { name: "Waste Disposal", value: 147 },
+  { name: "Vehicle Fleet", value: 400 }
 ];
 
 export const mockTrend = [
-  { month: "Jan", emissions: 230 },
-  { month: "Feb", emissions: 241 },
-  { month: "Mar", emissions: 254 },
-  { month: "Apr", emissions: 265 },
-  { month: "May", emissions: 276 },
-  { month: "Jun", emissions: 289 }
+  { period: "Jan", value: 230 },
+  { period: "Feb", value: 241 },
+  { period: "Mar", value: 254 },
+  { period: "Apr", value: 265 },
+  { period: "May", value: 276 },
+  { period: "Jun", value: 289 }
 ];
 
 export const mockTopActivities = [
