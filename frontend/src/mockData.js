@@ -183,14 +183,20 @@ export const mockLLMInsights = {
       description: "Implement LED lighting and smart HVAC systems",
       impact: "High",
       cost: "Medium",
-      annualSavings: "€25,000"
+      savings: "€25,000",
+      annual_savings: "€25,000",
+      timeline: "3-6 months",
+      priority: "High"
     },
     {
       title: "Renewable Energy",
       description: "Switch to 100% renewable electricity",
       impact: "Very High",
       cost: "High",
-      annualSavings: "€35,000"
+      savings: "€35,000",
+      annual_savings: "€35,000",
+      timeline: "6-12 months",
+      priority: "Medium"
     }
   ],
   riskAnalysis: [

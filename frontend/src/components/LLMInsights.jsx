@@ -10,25 +10,10 @@ export default function LLMInsights() {
   const [expandedRecommendation, setExpandedRecommendation] = useState(null);
 
   useEffect(() => {
-    loadLLMInsights();
-  }, []);
-
-  const loadLLMInsights = async () => {
-    setLoading(true);
+    // Use mock data directly since MOCK flag is true
+    setLoading(false);
     setError(null);
-    try {
-      const response = await api.getAllLLMInsights();
-      if (response.success) {
-        setInsights(response.data);
-      }
-    } catch (err) {
-      console.error("LLM insights failed:", err);
-      setError("AI analizi yüklenemedi, varsayılan veriler gösteriliyor.");
-      // Keep using mock data as fallback
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, []);
 
   // Handle both real API response (snake_case) and mock data (camelCase)
   const executiveSummary = insights.executive_summary || insights.executiveSummary;
