@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { api } from "../lib/api";
+import { api } from "../lib/api.js";
 
 export default function UploadForm({ onUploaded }) {
   const [file, setFile] = useState(null);
