@@ -5,7 +5,7 @@ const isProduction = import.meta.env.PROD;
 // Backend URL configuration
 export const BACKEND_URL = isDevelopment 
   ? 'http://localhost:8000'  // Development
-  : import.meta.env.VITE_BACKEND_URL || 'https://your-backend-url.railway.app';  // Production
+  : import.meta.env.VITE_BACKEND_URL || 'https://carbon-smart-mvp-production.up.railway.app';  // Production
 
 // Feature flags
 export const FEATURE_FLAGS = {
