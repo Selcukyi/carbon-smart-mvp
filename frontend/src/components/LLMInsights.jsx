@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { api } from "../lib/api.js";
+import { api } from "../api.js";
 import { mockLLMInsights } from "../mockData.js";
 
 export default function LLMInsights() {
