@@ -26,7 +26,7 @@ export default function Home() {
         <div className="nav-container">
           <div className="nav-brand">
             <span className="brand-icon">🌍</span>
-            <span className="brand-text">CarbonSmart</span>
+            <span className="brand-text">CarbonLens</span>
           </div>
           <div className="nav-links">
             {isAuthenticated ? (
@@ -225,7 +225,7 @@ export default function Home() {
                     <span></span>
                     <span></span>
                   </div>
-                  <span className="demo-card-title">CarbonSmart Dashboard</span>
+                  <span className="demo-card-title">CarbonLens Dashboard</span>
                 </div>
                 <div className="demo-card-content">
                   <div className="demo-chart">
@@ -257,7 +257,7 @@ export default function Home() {
           <div className="cta-content">
             <h2 className="cta-title">Ready to Transform Your Carbon Management?</h2>
             <p className="cta-description">
-              Join leading companies using CarbonSmart to achieve their sustainability goals
+              Join leading companies using CarbonLens to achieve their sustainability goals
             </p>
             <div className="cta-actions">
               <Link to="/dashboard" className="btn-primary large">
@@ -279,7 +279,7 @@ export default function Home() {
           <div className="footer-content">
             <div className="footer-brand">
               <span className="brand-icon">🌍</span>
-              <span className="brand-text">CarbonSmart</span>
+              <span className="brand-text">CarbonLens</span>
             </div>
             <div className="footer-links">
               <Link to="/dashboard" className="footer-link">Dashboard</Link>
@@ -289,7 +289,7 @@ export default function Home() {
             </div>
           </div>
           <div className="footer-bottom">
-            <p>&copy; 2025 CarbonSmart. All rights reserved.</p>
+            <p>&copy; 2025 CarbonLens. All rights reserved.</p>
           </div>
         </div>
       </footer>
