@@ -3,6 +3,7 @@ import Home from "./pages/Home.jsx";
 import Login from "./components/Login.jsx";
 import Upload from "./pages/Upload.jsx";
 import Dashboard from "./pages/Dashboard.jsx";
+import Emissions from "./pages/Emissions.jsx";
 import Entities from "./pages/Entities.jsx";
 import Allowances from "./pages/Allowances.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
@@ -13,6 +14,10 @@ export const router = createBrowserRouter([
   { 
     path: "/dashboard", 
     element: <ProtectedRoute><Dashboard /></ProtectedRoute> 
+  },
+  { 
+    path: "/emissions", 
+    element: <ProtectedRoute><Emissions /></ProtectedRoute> 
   },
   { 
     path: "/upload", 

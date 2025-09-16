@@ -52,6 +52,7 @@ export default function NavSidebar({ role = "ADMIN", isAuthenticated = true, onL
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             {link("/", "Home")}
             {link("/dashboard", "Dashboard")}
+            {link("/emissions", "Emissions")}
             {link("/upload", "Upload")}
             {link("/entities", "Entities")}
             {link("/allowances", "Allowances")}

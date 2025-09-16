@@ -2,6 +2,9 @@
  * Utility functions for managing URL query parameters
  */
 
+import { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+
 /**
  * Parse URL search params into an object
  * @param {URLSearchParams} searchParams - URL search parameters
@@ -138,4 +141,39 @@ export function clearQueryParams(navigate) {
   } else {
     window.history.replaceState({}, '', window.location.pathname);
   }
+}
+
+/**
+ * React hook for managing query state
+ * @param {Object} defaults - Default values for query parameters
+ * @returns {Array} [queryState, setQueryState] tuple
+ */
+export function useQueryState(defaults = {}) {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [queryState, setQueryStateInternal] = useState(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const current = parseQueryParams(searchParams);
+    return { ...defaults, ...current };
+  });
+
+  // Update query state when URL changes
+  useEffect(() => {
+    const searchParams = new URLSearchParams(location.search);
+    const current = parseQueryParams(searchParams);
+    setQueryStateInternal(prev => ({ ...prev, ...current }));
+  }, [location.search]);
+
+  // Function to update query state
+  const setQueryState = (updates) => {
+    const newState = { ...queryState, ...updates };
+    setQueryStateInternal(newState);
+    
+    // Update URL
+    const searchParams = buildQueryParams(newState);
+    const newUrl = `${location.pathname}?${searchParams.toString()}`;
+    navigate(newUrl, { replace: true });
+  };
+
+  return [queryState, setQueryState];
 }
