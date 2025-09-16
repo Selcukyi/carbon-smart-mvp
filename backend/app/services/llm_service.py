@@ -38,6 +38,30 @@ class LLMService:
             logger.error(f"LLM analysis failed: {e}")
             return self._get_fallback_analysis(emissions_data)
     
+    async def generate_explanation(self, prompt: str) -> str:
+        """
+        Generate AI-powered explanation from prompt
+        """
+        # Disable OpenAI calls to stay within free limits - use fallback only
+        return self._get_fallback_explanation(prompt)
+            
+        try:
+            response = await self.client.chat.completions.create(
+                model="gpt-4",
+                messages=[
+                    {"role": "system", "content": "You are a carbon emissions expert. Provide concise, actionable insights based on the data provided. Focus on specific metrics and practical recommendations."},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.7,
+                max_tokens=500
+            )
+            
+            return response.choices[0].message.content
+            
+        except Exception as e:
+            logger.error(f"LLM explanation failed: {e}")
+            return self._get_fallback_explanation(prompt)
+
     async def generate_recommendations(self, emissions_data: Dict[str, Any]) -> List[Dict[str, Any]]:
         """
         Generate AI-powered carbon reduction recommendations
@@ -479,6 +503,21 @@ class LLMService:
             "overall_risk_level": "High" if deficit > 0 else "Medium",
             "risks": random.choice(risk_sets)
         }
+
+    def _get_fallback_explanation(self, prompt: str) -> str:
+        """
+        Get fallback explanation when LLM is unavailable
+        """
+        if "overview" in prompt.lower():
+            return "Carbon emissions analysis shows opportunities for improvement across all scopes. Focus on energy efficiency and renewable energy adoption to achieve reduction targets."
+        elif "emissions" in prompt.lower():
+            return "Emissions data indicates significant reduction potential in Scope 1 and 2 activities. Implement energy efficiency programs and renewable energy sources."
+        elif "compliance" in prompt.lower():
+            return "EU ETS compliance requires immediate action to address allowance deficit. Consider purchasing additional allowances and implementing rapid emission reductions."
+        elif "intensity" in prompt.lower():
+            return "Carbon intensity metrics show room for improvement in operational efficiency. Optimize production processes and improve energy management systems."
+        else:
+            return "Analysis completed successfully. Review the data for optimization opportunities and implement efficiency improvements."
 
 # Global instance
 llm_service = LLMService()

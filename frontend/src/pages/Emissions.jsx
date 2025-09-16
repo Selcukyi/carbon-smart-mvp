@@ -449,12 +449,7 @@ export default function Emissions() {
       <div className="insights-section">
         <LLMInsights
           context="emissions"
-          filters={{
-            start: queryState.start,
-            end: queryState.end,
-            entities: queryState.entities,
-            pareto: queryState.pareto
-          }}
+          data={data}
         />
       </div>
       </div>

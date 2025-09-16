@@ -13,7 +13,7 @@ export const FEATURE_FLAGS = {
   ENABLE_FILE_UPLOAD: true,
   ENABLE_AI_EXPLANATIONS: true,
   ENABLE_DARK_MODE: true,
-  MOCK: true, // Enable mock data for development
+  MOCK: false, // Disable mock data to use real backend
 };
 
 // API endpoints

@@ -78,8 +78,150 @@ DATABASE_URL=sqlite:///./carbon_smart.db
 SECRET_KEY=your_secret_key
 ```
 
+## 🏢 Hubs & Routes
+
+### Overview Hub
+**Endpoint**: `GET /`  
+**Description**: Landing page with project overview and navigation  
+**Features**: Modern hero section, feature highlights, call-to-action
+
+### Dashboard Hub
+**Endpoint**: `GET /dashboard`  
+**Description**: Main dashboard with KPIs and charts  
+**Features**: 
+- Total emissions KPI cards
+- EU ETS financial impact
+- Scope breakdown charts
+- Top activities table
+
+### Emissions Hub
+**Endpoint**: `GET /emissions`  
+**Description**: Detailed emissions analysis and reporting  
+**Query Parameters**:
+- `start` (date): Start date (YYYY-MM-DD)
+- `end` (date): End date (YYYY-MM-DD)  
+- `entities` (string): Comma-separated entity IDs
+- `pareto` (boolean): Enable 80/20 analysis
+
+**Sample Request**:
+```bash
+curl "http://localhost:8000/emissions?start=2025-01-01&end=2025-12-31&entities=1,2&pareto=false"
+```
+
+**Response Structure**:
+```json
+{
+  "summary": {
+    "total_tco2e": 2776.44,
+    "yoy_pct": -5.7
+  },
+  "series": [...],
+  "scopes": [...],
+  "top_categories": [...]
+}
+```
+
+### Compliance Hub
+**Endpoint**: `GET /compliance`  
+**Description**: EU ETS compliance monitoring and risk analysis  
+**Query Parameters**:
+- `start` (date): Start date (YYYY-MM-DD)
+- `end` (date): End date (YYYY-MM-DD)
+- `entities` (string): Comma-separated entity IDs
+- `prices` (string): Comma-separated price scenarios
+
+**Sample Request**:
+```bash
+curl "http://localhost:8000/compliance?start=2025-01-01&end=2025-12-31&entities=1,2&prices=90,120,150"
+```
+
+**Response Structure**:
+```json
+{
+  "current_overshoot_tco2e": 329.82,
+  "ytd_cost_eur": 28199.61,
+  "allowances": [...],
+  "scenarios": [...]
+}
+```
+
+### Intensity Hub
+**Endpoint**: `GET /intensity`  
+**Description**: Carbon intensity analysis and productivity metrics  
+**Query Parameters**:
+- `start` (date): Start date (YYYY-MM-DD)
+- `end` (date): End date (YYYY-MM-DD)
+- `entities` (string): Comma-separated entity IDs
+
+**Sample Request**:
+```bash
+curl "http://localhost:8000/intensity?start=2025-01-01&end=2025-12-31&entities=1,2"
+```
+
+**Response Structure**:
+```json
+{
+  "current_intensity": 2.28,
+  "yoy_change_pct": -5.2,
+  "series": [...],
+  "site_scatter": [...],
+  "correlation": 0.894
+}
+```
+
+### LLM Explain API
+**Endpoint**: `POST /api/llm/explain`  
+**Description**: AI-powered context-aware explanations  
+**Request Body**:
+```json
+{
+  "context": "emissions|compliance|intensity|overview",
+  "data": { /* hub-specific data */ }
+}
+```
+
+**Response Structure**:
+```json
+{
+  "summary": "AI-generated analysis summary",
+  "actions": [
+    "Action item 1",
+    "Action item 2", 
+    "Action item 3"
+  ]
+}
+```
+
+### Screenshots
+*[Screenshots will be added showing each hub interface]*
+
+- **Dashboard**: KPI cards, charts, and overview metrics
+- **Emissions**: Line charts, scope breakdown, top categories table
+- **Compliance**: EU ETS status, price scenarios, risk analysis
+- **Intensity**: Trend charts, scatter plots, leaderboard table
+
+### Switching to PostgreSQL
+The application is designed to work with both SQLite (development) and PostgreSQL (production). To switch to PostgreSQL:
+
+1. **Install PostgreSQL** and create a database
+2. **Update environment variables**:
+   ```bash
+   DATABASE_URL=postgresql://user:password@localhost:5432/carbonlens
+   ```
+3. **Install additional dependencies**:
+   ```bash
+   pip install psycopg2-binary
+   ```
+4. **Run migrations** (when implemented):
+   ```bash
+   alembic upgrade head
+   ```
+
+The application will automatically detect the database type and configure accordingly.
+
 ### API Endpoints
 - `GET /api/llm/insights` - AI-powered analysis
+- `POST /api/llm/explain` - Context-aware AI explanations
 - `POST /api/upload` - File upload and processing
 - `GET /api/entities` - Organizational entities
 - `GET /api/allowances` - EU ETS allowance data

@@ -7,6 +7,7 @@ import Emissions from "./pages/Emissions.jsx";
 import Entities from "./pages/Entities.jsx";
 import Allowances from "./pages/Allowances.jsx";
 import Compliance from "./pages/Compliance.jsx";
+import Intensity from "./pages/Intensity.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 export const router = createBrowserRouter([
@@ -35,6 +36,10 @@ export const router = createBrowserRouter([
   { 
     path: "/compliance", 
     element: <ProtectedRoute><Compliance /></ProtectedRoute> 
+  },
+  { 
+    path: "/intensity", 
+    element: <ProtectedRoute><Intensity /></ProtectedRoute> 
   },
 ]);
 

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { api } from "../api.js";
 import { mockLLMInsights } from "../mockData.js";
 
-export default function LLMInsights({ context = "general" }) {
+export default function LLMInsights({ context = "general", data = null }) {
   const [insights, setInsights] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -10,19 +10,52 @@ export default function LLMInsights({ context = "general" }) {
   const [expandedRecommendation, setExpandedRecommendation] = useState(null);
 
   useEffect(() => {
-    // Simulate loading for better UX
-    const timer = setTimeout(() => {
-      // Use different mock data based on context
-      const contextInsights = context === "compliance" ? getComplianceInsights() : mockLLMInsights;
-      setInsights(contextInsights);
-      setLoading(false);
+    const loadInsights = async () => {
+      setLoading(true);
       setError(null);
-    }, 1500); // 1.5 second loading simulation
+      
+      try {
+        // Try to get real LLM insights if data is provided
+        if (data && context !== "general") {
+          try {
+            const response = await api.getLLMExplain(context, data);
+            setInsights({
+              summary: response.summary,
+              actions: response.actions
+            });
+            setLoading(false);
+            return;
+          } catch (apiError) {
+            console.warn("LLM API failed, using fallback:", apiError);
+          }
+        }
+        
+        // Fallback to mock data
+        const contextInsights = context === "compliance" 
+          ? getComplianceInsights() 
+          : context === "intensity" 
+          ? getIntensityInsights() 
+          : mockLLMInsights;
+        setInsights(contextInsights);
+      } catch (err) {
+        console.error("Failed to load insights:", err);
+        setError("Failed to load AI insights");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    return () => clearTimeout(timer);
-  }, [context]);
+    loadInsights();
+  }, [context, data]);
 
-  // Handle both real API response (snake_case) and mock data (camelCase)
+  // Handle both new structured response and legacy mock data
+  const isStructuredResponse = insights?.summary && insights?.actions;
+  
+  // For structured response (new API)
+  const summary = insights?.summary;
+  const actions = insights?.actions || [];
+  
+  // For legacy mock data (fallback)
   const executiveSummary = insights?.executive_summary || insights?.executiveSummary;
   const keyRecommendations = insights?.recommendations || insights?.keyRecommendations;
   const riskAnalysis = insights?.risk_analysis || insights?.riskAnalysis;
@@ -92,34 +125,100 @@ export default function LLMInsights({ context = "general" }) {
 
   return (
     <div className="llm-insights">
-
-              {/* Executive Summary */}
-              <div className="insight-card priority-high">
-                <div className="insight-header">
-                  <h3>{executiveSummary?.title || "Executive Summary"}</h3>
-                  <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                    <button
-                      onClick={() => {}}
-                      disabled={loading}
-                      className="btn btn-sm"
-                      style={{
-                        fontSize: '0.75rem',
-                        padding: '0.25rem 0.5rem',
-                        opacity: loading ? 0.6 : 1
-                      }}
-                    >
-                      {loading ? 'Yenileniyor...' : '🔄 Yenile'}
-                    </button>
-                    <div className="priority-badge high">High Priority</div>
-                  </div>
-                </div>
-                <div className="insight-content">
-                  <p>{executiveSummary?.content || executiveSummary?.executive_summary || "AI analizi yükleniyor..."}</p>
-                  <div className="impact-highlight">
-                    <strong>Financial Impact:</strong> {executiveSummary?.impact || executiveSummary?.financial_impact || "Hesaplanıyor..."}
-                  </div>
-                </div>
+      {isStructuredResponse ? (
+        // New structured response
+        <>
+          {/* AI Summary */}
+          <div className="insight-card priority-high">
+            <div className="insight-header">
+              <h3>AI Analysis</h3>
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                <button
+                  onClick={() => window.location.reload()}
+                  className="btn btn-sm"
+                  style={{
+                    fontSize: '0.75rem',
+                    padding: '0.25rem 0.5rem'
+                  }}
+                >
+                  🔄 Refresh
+                </button>
+                <div className="priority-badge high">AI Generated</div>
               </div>
+            </div>
+            <div className="insight-content">
+              <p>{summary}</p>
+            </div>
+          </div>
+
+          {/* Action Items */}
+          {actions.length > 0 && (
+            <div className="insight-card">
+              <div className="insight-header">
+                <h3>Recommended Actions</h3>
+              </div>
+              <div className="insight-content">
+                <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                  {actions.map((action, index) => (
+                    <li key={index} style={{ 
+                      marginBottom: '0.75rem',
+                      padding: '0.75rem',
+                      backgroundColor: '#f8fafc',
+                      borderRadius: '6px',
+                      borderLeft: '3px solid #3b82f6'
+                    }}>
+                      <div style={{ 
+                        display: 'flex', 
+                        alignItems: 'flex-start',
+                        gap: '0.5rem'
+                      }}>
+                        <span style={{ 
+                          color: '#3b82f6',
+                          fontWeight: '600',
+                          fontSize: '0.875rem',
+                          minWidth: '20px'
+                        }}>
+                          {index + 1}.
+                        </span>
+                        <span style={{ fontSize: '0.875rem', lineHeight: '1.5' }}>
+                          {action}
+                        </span>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
+        </>
+      ) : (
+        // Legacy mock data response
+        <>
+          {/* Executive Summary */}
+          <div className="insight-card priority-high">
+            <div className="insight-header">
+              <h3>{executiveSummary?.title || "Executive Summary"}</h3>
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                <button
+                  onClick={() => window.location.reload()}
+                  className="btn btn-sm"
+                  style={{
+                    fontSize: '0.75rem',
+                    padding: '0.25rem 0.5rem'
+                  }}
+                >
+                  🔄 Refresh
+                </button>
+                <div className="priority-badge high">High Priority</div>
+              </div>
+            </div>
+            <div className="insight-content">
+              <p>{executiveSummary?.content || executiveSummary?.executive_summary || "AI analizi yükleniyor..."}</p>
+              <div className="impact-highlight">
+                <strong>Financial Impact:</strong> {executiveSummary?.impact || executiveSummary?.financial_impact || "Hesaplanıyor..."}
+              </div>
+            </div>
+          </div>
 
       {/* Key Recommendations */}
       <div className="insight-card">
@@ -244,6 +343,8 @@ export default function LLMInsights({ context = "general" }) {
           </div>
         </div>
       </div>
+        </>
+      )}
     </div>
   );
 }
@@ -341,6 +442,84 @@ function getComplianceInsights() {
           metric: "Risk Level",
           value: "High",
           benchmark: "Low",
+          status: "above"
+        }
+      ]
+    }
+  };
+}
+
+// Intensity-specific insights
+function getIntensityInsights() {
+  return {
+    executiveSummary: {
+      title: "Carbon Intensity Analysis",
+      content: "Current carbon intensity stands at 2.28 tCO₂e/€M with a 5.2% year-over-year improvement. Revenue-emissions correlation of 0.894 indicates strong positive relationship, suggesting growth-driven emissions. Focus on decoupling strategies recommended.",
+      impact: "5.2% intensity improvement achieved year-over-year"
+    },
+    recommendations: [
+      {
+        title: "Implement Energy Efficiency Programs",
+        description: "Deploy smart building technologies and renewable energy systems across all facilities to reduce energy-related emissions per revenue unit.",
+        priority: "high",
+        effort: "medium",
+        impact: "high",
+        details: "Focus on Munich HQ and Hamburg Plant which show highest intensity values. Expected 15-20% reduction in energy-related emissions."
+      },
+      {
+        title: "Optimize Supply Chain Operations",
+        description: "Review and optimize logistics routes, supplier selection, and transportation methods to reduce Scope 3 emissions intensity.",
+        priority: "medium",
+        effort: "high",
+        impact: "medium",
+        details: "Analyze current supplier carbon footprints and implement green procurement policies. Target 10-15% reduction in logistics emissions."
+      },
+      {
+        title: "Revenue Growth Decoupling",
+        description: "Develop strategies to grow revenue while maintaining or reducing absolute emissions through digital transformation and process optimization.",
+        priority: "high",
+        effort: "high",
+        impact: "high",
+        details: "Implement digital solutions, automation, and circular economy principles to achieve negative intensity growth despite revenue increases."
+      }
+    ],
+    riskAnalysis: {
+      title: "Intensity Risk Assessment",
+      content: "Moderate risk level due to strong revenue-emissions correlation. Current improvement trajectory is positive but may not be sufficient for long-term climate targets. Key risks include regulatory changes and market pressure for carbon-neutral operations.",
+      level: "moderate",
+      factors: [
+        "Strong revenue-emissions correlation (0.894) limits decoupling flexibility",
+        "Seasonal intensity variations indicate weather dependency",
+        "Site-level performance varies significantly (1.86-2.94 tCO₂e/€M range)",
+        "Limited historical data for trend analysis"
+      ]
+    },
+    performanceMetrics: {
+      title: "Performance Metrics",
+      content: "Carbon productivity of 0.44 €M/tCO₂e shows room for improvement. Leaderboard analysis reveals top performers achieving 15-20% intensity reductions. Focus on replicating best practices across all sites.",
+      metrics: [
+        {
+          metric: "Current Intensity",
+          value: "2.28 tCO₂e/€M",
+          benchmark: "2.0 tCO₂e/€M",
+          status: "above"
+        },
+        {
+          metric: "YoY Improvement",
+          value: "5.2%",
+          benchmark: "10%",
+          status: "below"
+        },
+        {
+          metric: "Carbon Productivity",
+          value: "0.44 €M/tCO₂e",
+          benchmark: "0.50 €M/tCO₂e",
+          status: "below"
+        },
+        {
+          metric: "Site Performance Range",
+          value: "1.86-2.94",
+          benchmark: "<1.0 range",
           status: "above"
         }
       ]

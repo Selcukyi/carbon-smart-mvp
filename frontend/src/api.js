@@ -137,7 +137,7 @@ export const api = {
   async getEmissions(params = {}) {
     if (FEATURE_FLAGS.MOCK) return mock.emissionsSummary();
     const q = new URLSearchParams(params).toString();
-    return httpGet(`/api/emissions?${q}`);
+    return httpGet(`/emissions?${q}`);
   },
 
   async getCompliance(params = {}) {
@@ -156,7 +156,7 @@ export const api = {
       };
     }
     const q = new URLSearchParams(params).toString();
-    return httpGet(`/api/compliance?${q}`);
+    return httpGet(`/compliance?${q}`);
   },
 
   async getIntensity(params = {}) {
@@ -175,7 +175,7 @@ export const api = {
       };
     }
     const q = new URLSearchParams(params).toString();
-    return httpGet(`/api/intensity?${q}`);
+    return httpGet(`/intensity?${q}`);
   },
 
   async getAIExplain(context, params = {}) {
@@ -239,5 +239,103 @@ export const api = {
     });
     
     return httpGet(`/compliance?${params}`);
+  },
+
+  async getIntensity(start, end, entities) {
+    if (FEATURE_FLAGS.MOCK) {
+      // Mock intensity data
+      const mockCurrentIntensity = 2.28;
+      const mockYoyChange = -5.2;
+      const mockCorrelation = 0.894;
+      
+      // Generate mock series data
+      const series = Array.from({ length: 12 }, (_, i) => {
+        const date = new Date(2025, i, 1);
+        return {
+          date: date.toISOString().split('T')[0],
+          intensity: 2.5 + Math.sin(i * Math.PI / 6) * 0.3 + Math.random() * 0.2 - 0.1
+        };
+      });
+      
+      // Generate mock scatter data
+      const sites = [
+        "Munich HQ", "Berlin Office", "Hamburg Plant", "Frankfurt Lab",
+        "Stuttgart Facility", "Cologne Branch", "Düsseldorf Center", "Leipzig Site"
+      ];
+      
+      const site_scatter = sites.map(site => {
+        const revenue = 10 + Math.random() * 20;
+        const emissions = 20 + Math.random() * 40;
+        return {
+          site,
+          revenue_meur: Math.round(revenue * 10) / 10,
+          tco2e: Math.round(emissions * 10) / 10,
+          intensity: Math.round((emissions / revenue) * 100) / 100
+        };
+      });
+      
+      return {
+        current_intensity: mockCurrentIntensity,
+        yoy_change_pct: mockYoyChange,
+        series,
+        site_scatter,
+        correlation: mockCorrelation
+      };
+    }
+    
+    const params = new URLSearchParams({
+      start,
+      end,
+      ...(entities && { entities: entities.join(',') })
+    });
+    
+    return httpGet(`/intensity?${params}`);
+  },
+
+  async getLLMExplain(context, data) {
+    if (FEATURE_FLAGS.MOCK) {
+      // Mock LLM explain response
+      const mockResponses = {
+        overview: {
+          summary: "Carbon emissions analysis shows opportunities for improvement across all scopes. Focus on energy efficiency and renewable energy adoption to achieve reduction targets.",
+          actions: [
+            "Implement energy efficiency programs",
+            "Optimize supply chain operations",
+            "Set reduction targets for 2025"
+          ]
+        },
+        emissions: {
+          summary: "Emissions data indicates significant reduction potential in Scope 1 and 2 activities. Implement energy efficiency programs and renewable energy sources.",
+          actions: [
+            "Upgrade to renewable energy sources",
+            "Improve manufacturing efficiency",
+            "Implement waste reduction programs"
+          ]
+        },
+        compliance: {
+          summary: "EU ETS compliance requires immediate action to address allowance deficit. Consider purchasing additional allowances and implementing rapid emission reductions.",
+          actions: [
+            "Purchase additional allowances",
+            "Implement rapid emission reductions",
+            "Review compliance strategy"
+          ]
+        },
+        intensity: {
+          summary: "Carbon intensity metrics show room for improvement in operational efficiency. Optimize production processes and improve energy management systems.",
+          actions: [
+            "Optimize production processes",
+            "Improve energy management",
+            "Decouple growth from emissions"
+          ]
+        }
+      };
+      
+      return mockResponses[context] || mockResponses.overview;
+    }
+    
+    return httpPost('/api/llm/explain', {
+      context,
+      data
+    });
   },
 };

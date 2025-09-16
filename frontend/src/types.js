@@ -128,6 +128,29 @@
  * @property {Array<PriceScenario>} scenarios - Price scenarios
  */
 
+/**
+ * @typedef {Object} IntensitySeriesPoint
+ * @property {string} date - Date (YYYY-MM-DD)
+ * @property {number} intensity - Intensity value (tCO2e per €M revenue)
+ */
+
+/**
+ * @typedef {Object} IntensityScatterPoint
+ * @property {string} site - Site name
+ * @property {number} revenue_meur - Revenue in millions EUR
+ * @property {number} tco2e - Total CO2e emissions
+ * @property {number} intensity - Intensity value (tCO2e per €M revenue)
+ */
+
+/**
+ * @typedef {Object} IntensityResponse
+ * @property {number} current_intensity - Current intensity value
+ * @property {number} yoy_change_pct - Year-over-year change percentage
+ * @property {Array<IntensitySeriesPoint>} series - Time series data
+ * @property {Array<IntensityScatterPoint>} site_scatter - Site-level scatter data
+ * @property {number} correlation - Pearson correlation between revenue and emissions
+ */
+
 // Export types for use in other files
 export const TYPES = {
   DateRange: 'DateRange',
@@ -145,5 +168,8 @@ export const TYPES = {
   ComplianceStatus: 'ComplianceStatus',
   AllowancePoint: 'AllowancePoint',
   PriceScenario: 'PriceScenario',
-  ComplianceResponse: 'ComplianceResponse'
+  ComplianceResponse: 'ComplianceResponse',
+  IntensitySeriesPoint: 'IntensitySeriesPoint',
+  IntensityScatterPoint: 'IntensityScatterPoint',
+  IntensityResponse: 'IntensityResponse'
 };
