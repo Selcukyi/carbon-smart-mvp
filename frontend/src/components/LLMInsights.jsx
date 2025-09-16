@@ -13,7 +13,11 @@ export default function LLMInsights({ context = "general" }) {
     // Simulate loading for better UX
     const timer = setTimeout(() => {
       // Use different mock data based on context
-      const contextInsights = context === "compliance" ? getComplianceInsights() : mockLLMInsights;
+      const contextInsights = context === "compliance" 
+        ? getComplianceInsights() 
+        : context === "intensity" 
+        ? getIntensityInsights() 
+        : mockLLMInsights;
       setInsights(contextInsights);
       setLoading(false);
       setError(null);
@@ -341,6 +345,84 @@ function getComplianceInsights() {
           metric: "Risk Level",
           value: "High",
           benchmark: "Low",
+          status: "above"
+        }
+      ]
+    }
+  };
+}
+
+// Intensity-specific insights
+function getIntensityInsights() {
+  return {
+    executiveSummary: {
+      title: "Carbon Intensity Analysis",
+      content: "Current carbon intensity stands at 2.28 tCO₂e/€M with a 5.2% year-over-year improvement. Revenue-emissions correlation of 0.894 indicates strong positive relationship, suggesting growth-driven emissions. Focus on decoupling strategies recommended.",
+      impact: "5.2% intensity improvement achieved year-over-year"
+    },
+    recommendations: [
+      {
+        title: "Implement Energy Efficiency Programs",
+        description: "Deploy smart building technologies and renewable energy systems across all facilities to reduce energy-related emissions per revenue unit.",
+        priority: "high",
+        effort: "medium",
+        impact: "high",
+        details: "Focus on Munich HQ and Hamburg Plant which show highest intensity values. Expected 15-20% reduction in energy-related emissions."
+      },
+      {
+        title: "Optimize Supply Chain Operations",
+        description: "Review and optimize logistics routes, supplier selection, and transportation methods to reduce Scope 3 emissions intensity.",
+        priority: "medium",
+        effort: "high",
+        impact: "medium",
+        details: "Analyze current supplier carbon footprints and implement green procurement policies. Target 10-15% reduction in logistics emissions."
+      },
+      {
+        title: "Revenue Growth Decoupling",
+        description: "Develop strategies to grow revenue while maintaining or reducing absolute emissions through digital transformation and process optimization.",
+        priority: "high",
+        effort: "high",
+        impact: "high",
+        details: "Implement digital solutions, automation, and circular economy principles to achieve negative intensity growth despite revenue increases."
+      }
+    ],
+    riskAnalysis: {
+      title: "Intensity Risk Assessment",
+      content: "Moderate risk level due to strong revenue-emissions correlation. Current improvement trajectory is positive but may not be sufficient for long-term climate targets. Key risks include regulatory changes and market pressure for carbon-neutral operations.",
+      level: "moderate",
+      factors: [
+        "Strong revenue-emissions correlation (0.894) limits decoupling flexibility",
+        "Seasonal intensity variations indicate weather dependency",
+        "Site-level performance varies significantly (1.86-2.94 tCO₂e/€M range)",
+        "Limited historical data for trend analysis"
+      ]
+    },
+    performanceMetrics: {
+      title: "Performance Metrics",
+      content: "Carbon productivity of 0.44 €M/tCO₂e shows room for improvement. Leaderboard analysis reveals top performers achieving 15-20% intensity reductions. Focus on replicating best practices across all sites.",
+      metrics: [
+        {
+          metric: "Current Intensity",
+          value: "2.28 tCO₂e/€M",
+          benchmark: "2.0 tCO₂e/€M",
+          status: "above"
+        },
+        {
+          metric: "YoY Improvement",
+          value: "5.2%",
+          benchmark: "10%",
+          status: "below"
+        },
+        {
+          metric: "Carbon Productivity",
+          value: "0.44 €M/tCO₂e",
+          benchmark: "0.50 €M/tCO₂e",
+          status: "below"
+        },
+        {
+          metric: "Site Performance Range",
+          value: "1.86-2.94",
+          benchmark: "<1.0 range",
           status: "above"
         }
       ]

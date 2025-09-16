@@ -2297,3 +2297,98 @@
     flex-shrink: 0;
   }
 }
+
+/* Intensity Hub Styles */
+.rank-cell {
+  text-align: center;
+  width: 60px;
+}
+
+.rank-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: bold;
+  color: white;
+}
+
+.rank-badge.rank-1 {
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #1f2937;
+}
+
+.rank-badge.rank-2 {
+  background: linear-gradient(135deg, #c0c0c0, #e5e7eb);
+  color: #1f2937;
+}
+
+.rank-badge.rank-3 {
+  background: linear-gradient(135deg, #cd7f32, #d97706);
+  color: white;
+}
+
+.rank-badge.rank-4,
+.rank-badge.rank-5 {
+  background: #6b7280;
+  color: white;
+}
+
+.site-cell {
+  font-weight: 500;
+}
+
+.improvement {
+  font-weight: 600;
+  text-align: center;
+}
+
+.improvement.positive {
+  color: #059669;
+}
+
+.improvement.negative {
+  color: #dc2626;
+}
+
+/* Scatter plot tooltip */
+.tooltip {
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.tooltip p {
+  margin: 2px 0;
+}
+
+.tooltip strong {
+  color: #60a5fa;
+}
+
+/* Responsive adjustments for Intensity page */
+@media (max-width: 768px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .kpi-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .data-table {
+    font-size: 12px;
+  }
+  
+  .rank-badge {
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+  }
+}

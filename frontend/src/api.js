@@ -240,4 +240,55 @@ export const api = {
     
     return httpGet(`/compliance?${params}`);
   },
+
+  async getIntensity(start, end, entities) {
+    if (FEATURE_FLAGS.MOCK) {
+      // Mock intensity data
+      const mockCurrentIntensity = 2.28;
+      const mockYoyChange = -5.2;
+      const mockCorrelation = 0.894;
+      
+      // Generate mock series data
+      const series = Array.from({ length: 12 }, (_, i) => {
+        const date = new Date(2025, i, 1);
+        return {
+          date: date.toISOString().split('T')[0],
+          intensity: 2.5 + Math.sin(i * Math.PI / 6) * 0.3 + Math.random() * 0.2 - 0.1
+        };
+      });
+      
+      // Generate mock scatter data
+      const sites = [
+        "Munich HQ", "Berlin Office", "Hamburg Plant", "Frankfurt Lab",
+        "Stuttgart Facility", "Cologne Branch", "Düsseldorf Center", "Leipzig Site"
+      ];
+      
+      const site_scatter = sites.map(site => {
+        const revenue = 10 + Math.random() * 20;
+        const emissions = 20 + Math.random() * 40;
+        return {
+          site,
+          revenue_meur: Math.round(revenue * 10) / 10,
+          tco2e: Math.round(emissions * 10) / 10,
+          intensity: Math.round((emissions / revenue) * 100) / 100
+        };
+      });
+      
+      return {
+        current_intensity: mockCurrentIntensity,
+        yoy_change_pct: mockYoyChange,
+        series,
+        site_scatter,
+        correlation: mockCorrelation
+      };
+    }
+    
+    const params = new URLSearchParams({
+      start,
+      end,
+      ...(entities && { entities: entities.join(',') })
+    });
+    
+    return httpGet(`/intensity?${params}`);
+  },
 };
