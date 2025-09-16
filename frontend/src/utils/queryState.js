@@ -132,6 +132,16 @@ export function getCurrentQueryParams() {
 }
 
 /**
+ * Simple function to get query state from URL search params
+ * @param {string} search - URL search string (e.g., "?start=2025-01-01&end=2025-12-31")
+ * @returns {Object} Parsed query parameters
+ */
+export function queryState(search) {
+  const searchParams = new URLSearchParams(search);
+  return parseQueryParams(searchParams);
+}
+
+/**
  * Clear all query parameters
  * @param {Function} navigate - Navigation function
  */
