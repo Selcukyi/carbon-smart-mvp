@@ -10,7 +10,15 @@ import LLMInsights from '../components/LLMInsights';
 export default function Intensity() {
   const location = useLocation();
   const navigate = useNavigate();
-  const [queryState, setQueryState] = useQueryState(location, navigate);
+  
+  // Get default date range for current year
+  const currentYear = new Date().getFullYear();
+  const defaultDateRange = {
+    start_date: `${currentYear}-01-01`,
+    end_date: `${currentYear}-12-31`
+  };
+  
+  const [queryState, setQueryState] = useQueryState(defaultDateRange);
   
   const [intensityData, setIntensityData] = useState(null);
   const [loading, setLoading] = useState(true);
