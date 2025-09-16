@@ -2,11 +2,14 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, ComposedChart } from "recharts";
 import { api } from "../api.js";
-import { queryState } from "../utils/queryState.js";
+import { parseQueryParams } from "../utils/queryState.js";
 import EntityMultiSelect from "../components/EntityMultiSelect.jsx";
+import NavSidebar from "../components/NavSidebar.jsx";
+import { useAuth } from "../contexts/AuthContext";
 import LLMInsights from "../components/LLMInsights.jsx";
 
 export default function Compliance() {
+  const { role, logout } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
   const [complianceData, setComplianceData] = useState(null);
@@ -20,7 +23,7 @@ export default function Compliance() {
   const [showAlert, setShowAlert] = useState(false);
 
   // Get query state
-  const currentQuery = queryState(location.search);
+  const currentQuery = parseQueryParams(new URLSearchParams(location.search));
 
   // Fetch entities data
   useEffect(() => {
@@ -131,28 +134,38 @@ export default function Compliance() {
 
   if (loading) {
     return (
-      <div className="page">
-        <div className="page-header">
-          <h1>Compliance Hub</h1>
-        </div>
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <p>Loading compliance data...</p>
-        </div>
+      <div className="flex min-h-screen">
+        <NavSidebar role={role} isAuthenticated={true} onLogout={logout} />
+        <main className="main-content">
+          <div className="page-container">
+            <div className="page-header">
+              <h1>Compliance Hub</h1>
+            </div>
+            <div className="loading-container">
+              <div className="loading-spinner"></div>
+              <p>Loading compliance data...</p>
+            </div>
+          </div>
+        </main>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="page">
-        <div className="page-header">
-          <h1>Compliance Hub</h1>
-        </div>
-        <div className="error-banner">
-          <span>⚠️</span>
-          <span>{error}</span>
-        </div>
+      <div className="flex min-h-screen">
+        <NavSidebar role={role} isAuthenticated={true} onLogout={logout} />
+        <main className="main-content">
+          <div className="page-container">
+            <div className="page-header">
+              <h1>Compliance Hub</h1>
+            </div>
+            <div className="error-banner">
+              <span>⚠️</span>
+              <span>{error}</span>
+            </div>
+          </div>
+        </main>
       </div>
     );
   }
@@ -160,7 +173,10 @@ export default function Compliance() {
   const riskInfo = getRiskLevel(complianceData?.current_overshoot_tco2e || 0);
 
   return (
-    <div className="page">
+    <div className="flex min-h-screen">
+      <NavSidebar role={role} isAuthenticated={true} onLogout={logout} />
+      <main className="main-content">
+      <div className="page-container">
       {/* Alert Toast */}
       {showAlert && (
         <div className="alert-toast">
@@ -252,8 +268,8 @@ export default function Compliance() {
                 <Tooltip 
                   formatter={(value, name) => [formatNumber(value), name === 'allocated' ? 'Allocated' : 'Actual']}
                 />
-                <Bar dataKey="allocated" fill="#22c55e" name="allocated" />
-                <Bar dataKey="actual" fill="#ef4444" name="actual" />
+                <Bar dataKey="allocated" fill="#0F4C81" name="Allocated" />
+                <Bar dataKey="actual" fill="#1B9AAA" name="Actual" />
               </ComposedChart>
             </ResponsiveContainer>
           </div>
@@ -319,9 +335,9 @@ export default function Compliance() {
                 <Line 
                   type="monotone" 
                   dataKey="exposure_eur" 
-                  stroke="#3b82f6" 
+                  stroke="#0F4C81" 
                   strokeWidth={3}
-                  dot={{ fill: '#3b82f6', strokeWidth: 2, r: 6 }}
+                  dot={{ fill: '#0F4C81', strokeWidth: 2, r: 4 }}
                 />
               </LineChart>
             </ResponsiveContainer>
@@ -369,6 +385,8 @@ export default function Compliance() {
 
       {/* LLM Insights */}
       <LLMInsights context="compliance" />
+      </div>
+      </main>
     </div>
   );
 }

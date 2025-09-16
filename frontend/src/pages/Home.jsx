@@ -6,10 +6,10 @@ export default function Home() {
   const { isAuthenticated, user } = useAuth();
   const [currentFeature, setCurrentFeature] = useState(0);
   const features = [
-    { icon: "📊", title: "Real-time Analytics", desc: "Monitor carbon emissions with live dashboards" },
-    { icon: "🤖", title: "AI-Powered Insights", desc: "Get intelligent recommendations and risk analysis" },
-    { icon: "⚖️", title: "EU ETS Compliance", desc: "Stay compliant with automated allowance tracking" },
-    { icon: "🌱", title: "Sustainability Goals", desc: "Track progress towards net-zero targets" }
+    { title: "Real-time Analytics", desc: "Monitor carbon emissions with live dashboards", color: "from-blue-500 to-cyan-500" },
+    { title: "AI-Powered Insights", desc: "Get intelligent recommendations and risk analysis", color: "from-purple-500 to-pink-500" },
+    { title: "EU ETS Compliance", desc: "Stay compliant with automated allowance tracking", color: "from-green-500 to-emerald-500" },
+    { title: "Sustainability Goals", desc: "Track progress towards net-zero targets", color: "from-orange-500 to-red-500" }
   ];
 
   useEffect(() => {
@@ -25,7 +25,9 @@ export default function Home() {
       <nav className="landing-nav">
         <div className="nav-container">
           <div className="nav-brand">
-            <span className="brand-icon">🌍</span>
+            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-green-500 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-sm">CL</span>
+            </div>
             <span className="brand-text">CarbonLens</span>
           </div>
           <div className="nav-links">
@@ -51,7 +53,7 @@ export default function Home() {
         </div>
         <div className="hero-content">
           <div className="hero-badge">
-            <span className="badge-icon">🚀</span>
+            <div className="w-2 h-2 bg-gradient-to-r from-blue-500 to-green-500 rounded-full animate-pulse"></div>
             <span>Next-Gen Carbon Management</span>
           </div>
           <h1 className="hero-title">
@@ -67,11 +69,13 @@ export default function Home() {
           <div className="hero-actions">
             <Link to="/dashboard" className="btn-primary">
               <span>Explore Dashboard</span>
-              <span className="btn-icon">→</span>
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
             </Link>
             <button className="btn-secondary">
               <span>Watch Demo</span>
-              <span className="btn-icon">▶</span>
+              <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                <div className="w-0 h-0 border-l-4 border-l-white border-y-2 border-y-transparent ml-0.5"></div>
+              </div>
             </button>
           </div>
           <div className="hero-stats">
@@ -93,7 +97,9 @@ export default function Home() {
           <div className="visual-container">
             <div className="floating-card main-card">
               <div className="card-header">
-                <span className="card-icon">📊</span>
+                <div className="w-6 h-6 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
+                  <div className="w-3 h-3 bg-white rounded-sm"></div>
+                </div>
                 <span>Live Dashboard</span>
               </div>
               <div className="card-content">
@@ -114,20 +120,22 @@ export default function Home() {
             
             <div className="floating-card secondary-card">
               <div className="card-header">
-                <span className="card-icon">🤖</span>
+                <div className="w-6 h-6 bg-gradient-to-br from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+                  <div className="w-3 h-3 bg-white rounded-full"></div>
+                </div>
                 <span>AI Insights</span>
               </div>
               <div className="card-content">
                 <div className="insight-item">
-                  <span className="insight-icon">⚡</span>
+                  <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
                   <span className="insight-text">Energy efficiency opportunities detected</span>
                 </div>
                 <div className="insight-item">
-                  <span className="insight-icon">🌱</span>
+                  <div className="w-2 h-2 bg-green-400 rounded-full"></div>
                   <span className="insight-text">Renewable energy transition recommended</span>
                 </div>
                 <div className="insight-item">
-                  <span className="insight-icon">📈</span>
+                  <div className="w-2 h-2 bg-blue-400 rounded-full"></div>
                   <span className="insight-text">Cost savings potential: €28,000</span>
                 </div>
               </div>
@@ -135,21 +143,32 @@ export default function Home() {
 
             <div className="floating-card tertiary-card">
               <div className="card-header">
-                <span className="card-icon">⚖️</span>
+                <div className="w-6 h-6 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg flex items-center justify-center">
+                  <div className="w-3 h-3 bg-white rounded-sm rotate-45"></div>
+                </div>
                 <span>Compliance Status</span>
               </div>
               <div className="card-content">
                 <div className="compliance-item">
                   <span className="compliance-label">EU ETS</span>
-                  <span className="compliance-status warning">⚠️ Over Limit</span>
+                  <span className="compliance-status warning flex items-center gap-1">
+                    <div className="w-2 h-2 bg-red-500 rounded-full"></div>
+                    Over Limit
+                  </span>
                 </div>
                 <div className="compliance-item">
                   <span className="compliance-label">ISO 14064</span>
-                  <span className="compliance-status good">✅ Compliant</span>
+                  <span className="compliance-status good flex items-center gap-1">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    Compliant
+                  </span>
                 </div>
                 <div className="compliance-item">
                   <span className="compliance-label">GHG Protocol</span>
-                  <span className="compliance-status good">✅ Compliant</span>
+                  <span className="compliance-status good flex items-center gap-1">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    Compliant
+                  </span>
                 </div>
               </div>
             </div>
@@ -173,10 +192,16 @@ export default function Home() {
                 className={`feature-card ${index === currentFeature ? 'active' : ''}`}
                 onMouseEnter={() => setCurrentFeature(index)}
               >
-                <div className="feature-icon">{feature.icon}</div>
+                <div className={`w-16 h-16 bg-gradient-to-br ${feature.color} rounded-2xl flex items-center justify-center mb-4`}>
+                  <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+                    <div className="w-4 h-4 bg-gradient-to-br from-gray-600 to-gray-800 rounded-sm"></div>
+                  </div>
+                </div>
                 <h3 className="feature-title">{feature.title}</h3>
                 <p className="feature-description">{feature.desc}</p>
-                <div className="feature-arrow">→</div>
+                <div className="feature-arrow">
+                  <div className="w-6 h-6 border-2 border-white border-l-transparent rounded-full animate-spin"></div>
+                </div>
               </div>
             ))}
           </div>
@@ -196,25 +221,33 @@ export default function Home() {
               </p>
               <div className="demo-features">
                 <div className="demo-feature">
-                  <span className="demo-feature-icon">✅</span>
+                  <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                    <div className="w-2 h-2 bg-white rounded-full"></div>
+                  </div>
                   <span>Real-time emission tracking</span>
                 </div>
                 <div className="demo-feature">
-                  <span className="demo-feature-icon">✅</span>
+                  <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                    <div className="w-2 h-2 bg-white rounded-full"></div>
+                  </div>
                   <span>EU ETS compliance automation</span>
                 </div>
                 <div className="demo-feature">
-                  <span className="demo-feature-icon">✅</span>
+                  <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                    <div className="w-2 h-2 bg-white rounded-full"></div>
+                  </div>
                   <span>AI-powered risk analysis</span>
                 </div>
                 <div className="demo-feature">
-                  <span className="demo-feature-icon">✅</span>
+                  <div className="w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                    <div className="w-2 h-2 bg-white rounded-full"></div>
+                  </div>
                   <span>Intelligent recommendations</span>
                 </div>
               </div>
               <Link to="/dashboard" className="btn-primary">
                 <span>Try Live Demo</span>
-                <span className="btn-icon">→</span>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               </Link>
             </div>
             <div className="demo-visual">
@@ -262,11 +295,13 @@ export default function Home() {
             <div className="cta-actions">
               <Link to="/dashboard" className="btn-primary large">
                 <span>Get Started Now</span>
-                <span className="btn-icon">→</span>
+                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               </Link>
               <Link to="/upload" className="btn-secondary large">
                 <span>Upload Your Data</span>
-                <span className="btn-icon">📁</span>
+                <div className="w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                  <div className="w-2 h-2 bg-gray-600 rounded-sm"></div>
+                </div>
               </Link>
             </div>
           </div>
@@ -278,7 +313,9 @@ export default function Home() {
         <div className="section-container">
           <div className="footer-content">
             <div className="footer-brand">
-              <span className="brand-icon">🌍</span>
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-green-500 rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-sm">CL</span>
+              </div>
               <span className="brand-text">CarbonLens</span>
             </div>
             <div className="footer-links">

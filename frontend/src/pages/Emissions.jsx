@@ -9,8 +9,11 @@ import BarCard from '../components/BarCard';
 import TableCard from '../components/TableCard';
 import DownloadMenu from '../components/DownloadMenu';
 import LLMInsights from '../components/LLMInsights';
+import NavSidebar from "../components/NavSidebar.jsx";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function Emissions() {
+  const { role, logout } = useAuth();
   const [queryState, setQueryState] = useQueryState({
     start: '2025-01-01',
     end: '2025-12-31',
@@ -129,23 +132,28 @@ export default function Emissions() {
   // Loading skeleton
   if (loading) {
     return (
-      <div className="page-container">
-        <div className="page-header">
-          <h1>Emissions Analysis</h1>
-          <div className="filters">
-            <div className="skeleton skeleton-filter"></div>
-            <div className="skeleton skeleton-filter"></div>
-            <div className="skeleton skeleton-toggle"></div>
+      <div className="flex min-h-screen">
+        <NavSidebar role={role} isAuthenticated={true} onLogout={logout} />
+        <main className="main-content">
+          <div className="page-container">
+            <div className="page-header">
+              <h1>Emissions Analysis</h1>
+              <div className="filters">
+                <div className="skeleton skeleton-filter"></div>
+                <div className="skeleton skeleton-filter"></div>
+                <div className="skeleton skeleton-toggle"></div>
+              </div>
+            </div>
+            <div className="tabs">
+              <div className="skeleton skeleton-tab"></div>
+              <div className="skeleton skeleton-tab"></div>
+              <div className="skeleton skeleton-tab"></div>
+            </div>
+            <div className="content">
+              <div className="skeleton skeleton-chart"></div>
+            </div>
           </div>
-        </div>
-        <div className="tabs">
-          <div className="skeleton skeleton-tab"></div>
-          <div className="skeleton skeleton-tab"></div>
-          <div className="skeleton skeleton-tab"></div>
-        </div>
-        <div className="content">
-          <div className="skeleton skeleton-chart"></div>
-        </div>
+        </main>
       </div>
     );
   }
@@ -153,20 +161,25 @@ export default function Emissions() {
   // Error state
   if (error) {
     return (
-      <div className="page-container">
-        <div className="page-header">
-          <h1>Emissions Analysis</h1>
-        </div>
-        <div className="error-banner">
-          <div className="error-icon">⚠️</div>
-          <div className="error-message">{error}</div>
-          <button 
-            className="btn btn-sm"
-            onClick={() => window.location.reload()}
-          >
-            Retry
-          </button>
-        </div>
+      <div className="flex min-h-screen">
+        <NavSidebar role={role} isAuthenticated={true} onLogout={logout} />
+        <main className="main-content">
+          <div className="page-container">
+            <div className="page-header">
+              <h1>Emissions Analysis</h1>
+            </div>
+            <div className="error-banner">
+              <div className="error-icon">⚠️</div>
+              <div className="error-message">{error}</div>
+              <button 
+                className="btn btn-sm"
+                onClick={() => window.location.reload()}
+              >
+                Retry
+              </button>
+            </div>
+          </div>
+        </main>
       </div>
     );
   }
@@ -174,25 +187,41 @@ export default function Emissions() {
   // Empty state
   if (!data) {
     return (
-      <div className="page-container">
-        <div className="page-header">
-          <h1>Emissions Analysis</h1>
-        </div>
-        <div className="empty-state">
-          <div className="empty-icon">📊</div>
-          <div className="empty-message">No emissions data available</div>
-          <div className="empty-description">Try adjusting your date range or entity selection</div>
-        </div>
+      <div className="flex min-h-screen">
+        <NavSidebar role={role} isAuthenticated={true} onLogout={logout} />
+        <main className="main-content">
+          <div className="page-container">
+            <div className="page-header">
+              <h1>Emissions Analysis</h1>
+            </div>
+            <div className="empty-state">
+              <div className="empty-icon">📊</div>
+              <div className="empty-message">No emissions data available</div>
+              <div className="empty-description">Try adjusting your date range or entity selection</div>
+            </div>
+          </div>
+        </main>
       </div>
     );
   }
 
   return (
-    <div className="page-container">
+    <div className="flex min-h-screen">
+      <NavSidebar role={role} isAuthenticated={true} onLogout={logout} />
+      <main className="main-content">
+      <div className="page-container">
       {/* Header with Filters */}
       <div className="page-header">
-        <h1>Emissions Analysis</h1>
-        <div className="filters">
+        <div>
+          <h1>Emissions Analysis</h1>
+          <div className="page-subtitle">Track and analyze organizational emissions across time, scopes and categories</div>
+        </div>
+        <div className="toolbar">
+          <button className="btn">Export</button>
+          <button className="btn btn-primary">New Report</button>
+        </div>
+      </div>
+      <div className="filters">
           <div className="filter-section">
             <label className="filter-label">📅 Date Range</label>
             <div className="date-range-container">
@@ -301,7 +330,6 @@ export default function Emissions() {
             </label>
           </div>
         </div>
-      </div>
 
       {/* Tabs */}
       <div className="tabs">
@@ -429,6 +457,8 @@ export default function Emissions() {
           }}
         />
       </div>
+      </div>
+      </main>
     </div>
   );
 }

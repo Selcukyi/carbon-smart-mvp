@@ -1,27 +1,31 @@
 import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from "recharts";
 
-const COLORS = ["#16a34a", "#22c55e", "#86efac"]; // greens
+const COLORS = ["var(--primary-500)", "var(--accent-500)", "var(--secondary-400)"];
 
 export default function DonutCard({ data }) {
-  console.log("DonutCard data:", data);
-  const chartData = data.data || [
-    { name: "Scope 1", value: 1200 },
-    { name: "Scope 2", value: 1200 },
-    { name: "Scope 3", value: 447 },
+  const chartData = data?.data || [
+    { name: "Scope 1", value: 1200, color: "var(--primary-500)" },
+    { name: "Scope 2", value: 1200, color: "var(--accent-500)" },
+    { name: "Scope 3", value: 447, color: "var(--secondary-400)" },
   ];
-  console.log("DonutCard chartData:", chartData);
+
   return (
     <div className="chart-card">
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1rem' }}>
-        <h3 style={{ fontSize: '1.125rem', fontWeight: '600', color: '#111827' }}>Scope Analysis</h3>
-        <select style={{ fontSize: '0.875rem', border: '1px solid #d1d5db', borderRadius: '0.375rem', padding: '0.25rem 0.5rem', background: 'white', color: '#111827' }}>
-          <option>Scope 1</option>
-          <option>Scope 2</option>
-          <option>Scope 3</option>
-        </select>
+      <div className="chart-header">
+        <div>
+          <h3 className="chart-title">Scope Analysis</h3>
+          <p className="chart-subtitle">January 2025 - December 2025</p>
+        </div>
+        <div className="chart-actions">
+          <select className="form-select" style={{ width: 'auto', minWidth: '120px' }}>
+            <option>Scope 1</option>
+            <option>Scope 2</option>
+            <option>Scope 3</option>
+          </select>
+        </div>
       </div>
-      <div style={{ fontSize: '0.75rem', color: '#6b7280', marginBottom: '1rem' }}>January 2025 - December 2025</div>
-      <div style={{ width: '100%', height: '16rem' }}>
+      
+      <div className="chart-container">
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie 
@@ -35,13 +39,45 @@ export default function DonutCard({ data }) {
               paddingAngle={2}
             >
               {chartData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                <Cell key={`cell-${index}`} fill={entry.color || COLORS[index % COLORS.length]} />
               ))}
             </Pie>
-            <Tooltip formatter={(value) => [`${value} tCO₂e`, '']} />
-            <Legend />
+            <Tooltip 
+              formatter={(value) => [`${value} tCO₂e`, '']}
+              contentStyle={{
+                backgroundColor: 'var(--bg-card)',
+                border: '1px solid var(--border-light)',
+                borderRadius: 'var(--radius-lg)',
+                boxShadow: 'var(--shadow-lg)',
+                fontFamily: 'var(--font-sans)'
+              }}
+              labelStyle={{
+                color: 'var(--text-primary)',
+                fontWeight: 'var(--font-semibold)'
+              }}
+            />
+            <Legend 
+              wrapperStyle={{
+                fontFamily: 'var(--font-sans)',
+                fontSize: 'var(--text-sm)',
+                color: 'var(--text-secondary)'
+              }}
+            />
           </PieChart>
         </ResponsiveContainer>
+      </div>
+      
+      {/* Chart Legend */}
+      <div className="chart-legend">
+        {chartData.map((item, index) => (
+          <div key={item.name} className="legend-item">
+            <div 
+              className="legend-color" 
+              style={{ backgroundColor: item.color || COLORS[index % COLORS.length] }}
+            ></div>
+            <span>{item.name}</span>
+          </div>
+        ))}
       </div>
     </div>
   );

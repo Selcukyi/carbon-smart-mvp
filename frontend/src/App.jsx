@@ -5,9 +5,11 @@ import './App.css'
 
 function App() {
   return (
-    <AuthProvider>
-      <RouterProvider router={router} />
-    </AuthProvider>
+    <div className="min-h-screen bg-primary">
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
+    </div>
   )
 }
 

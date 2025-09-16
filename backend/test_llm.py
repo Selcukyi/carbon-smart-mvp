@@ -4,6 +4,12 @@ Test script for LLM functionality
 """
 import asyncio
 import os
+import sys
+
+# Ensure backend directory (containing `app`) is on sys.path when run directly
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+if CURRENT_DIR not in sys.path:
+    sys.path.insert(0, CURRENT_DIR)
 from app.services.llm_service import llm_service
 
 async def test_llm_service():
