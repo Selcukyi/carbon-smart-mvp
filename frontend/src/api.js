@@ -137,7 +137,7 @@ export const api = {
   async getEmissions(params = {}) {
     if (FEATURE_FLAGS.MOCK) return mock.emissionsSummary();
     const q = new URLSearchParams(params).toString();
-    return httpGet(`/api/emissions?${q}`);
+    return httpGet(`/emissions?${q}`);
   },
 
   async getCompliance(params = {}) {
@@ -156,7 +156,7 @@ export const api = {
       };
     }
     const q = new URLSearchParams(params).toString();
-    return httpGet(`/api/compliance?${q}`);
+    return httpGet(`/compliance?${q}`);
   },
 
   async getIntensity(params = {}) {
@@ -175,7 +175,7 @@ export const api = {
       };
     }
     const q = new URLSearchParams(params).toString();
-    return httpGet(`/api/intensity?${q}`);
+    return httpGet(`/intensity?${q}`);
   },
 
   async getAIExplain(context, params = {}) {
