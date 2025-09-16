@@ -1,12 +1,15 @@
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 from sqlalchemy import select
+from datetime import date
+from typing import List, Optional
 
 from ..db.database import get_db
 from ..models.activity import UploadedActivity
 from ..models.emission import EmissionRecord
 from ..models.factors import EmissionFactor
-from ..services.calc import compute_emissions_for_activity
+from ..services.calc import compute_emissions_for_activity, calc_emissions
+from ..schemas.emission import EmissionsResponse
 
 
 router = APIRouter(prefix="/emissions", tags=["emissions"])
@@ -34,14 +37,57 @@ def recalculate_emissions(period: str | None = None, db: Session = Depends(get_d
     return {"status": "ok", "inserted": inserted}
 
 
-@router.get("")
-def list_emissions(
+@router.get("", response_model=EmissionsResponse)
+def get_emissions(
+    start: Optional[date] = Query(None, description="Start date for emissions data"),
+    end: Optional[date] = Query(None, description="End date for emissions data"),
+    entities: Optional[str] = Query(None, description="Comma-separated list of entity IDs"),
+    pareto: bool = Query(False, description="Apply 80/20 Pareto analysis to categories"),
+):
+    """
+    Get emissions data with summary, time series, scope breakdown, and top categories.
+    
+    Query Parameters:
+    - start: Start date (defaults to beginning of current year)
+    - end: End date (defaults to end of current year)
+    - entities: Comma-separated entity IDs to filter by
+    - pareto: Whether to apply 80/20 Pareto analysis to categories
+    """
+    # Set default date range if not provided
+    if not start:
+        start = date(2025, 1, 1)
+    if not end:
+        end = date(2025, 12, 31)
+    
+    # Parse entity IDs
+    entity_ids = None
+    if entities:
+        try:
+            entity_ids = [int(id.strip()) for id in entities.split(',') if id.strip()]
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid entity IDs format")
+    
+    # Calculate emissions using the service
+    try:
+        emissions_response = calc_emissions(
+            date_range=(start, end),
+            entities=entity_ids,
+            pareto=pareto
+        )
+        return emissions_response
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Error calculating emissions: {str(e)}")
+
+
+@router.get("/legacy")
+def list_emissions_legacy(
     entity_id: int | None = None,
     period: str | None = None,
     page: int = Query(1, ge=1),
     size: int = Query(25, ge=1, le=200),
     db: Session = Depends(get_db),
 ):
+    """Legacy endpoint for backward compatibility."""
     q = db.query(EmissionRecord)
     if period:
         q = q.filter(EmissionRecord.period == period)
