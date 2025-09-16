@@ -20,9 +20,30 @@ export default function Emissions() {
   });
 
   const [data, setData] = useState(null);
+  const [entities, setEntities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [showDeepDive, setShowDeepDive] = useState(false);
+
+  // Fetch entities data
+  useEffect(() => {
+    const fetchEntities = async () => {
+      try {
+        const response = await api.getFacilities();
+        setEntities(response);
+      } catch (err) {
+        console.error('Failed to fetch entities:', err);
+        // Set mock entities as fallback
+        setEntities([
+          { id: 1, name: 'CarbonLens Group', city: 'Istanbul', country: 'Turkey' },
+          { id: 2, name: 'Manufacturing Division', city: 'Izmir', country: 'Turkey' },
+          { id: 3, name: 'Services Division', city: 'Ankara', country: 'Turkey' }
+        ]);
+      }
+    };
+
+    fetchEntities();
+  }, []);
 
   // Fetch emissions data
   useEffect(() => {
@@ -181,8 +202,9 @@ export default function Emissions() {
             }}
           />
           <EntityMultiSelect
-            selected={queryState.entities.split(',').map(Number)}
-            onChange={(entities) => handleFilterChange('entities', entities.join(','))}
+            entities={entities}
+            selectedIds={queryState.entities.split(',').map(Number)}
+            onSelectionChange={(selectedIds) => handleFilterChange('entities', selectedIds.join(','))}
           />
           <div className="toggle-group">
             <label className="toggle-label">
