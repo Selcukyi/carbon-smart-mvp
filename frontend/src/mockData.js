@@ -226,7 +226,11 @@ export const mockBudgetScenarios = [
 
 // LLM Insights mock data
 export const mockLLMInsights = {
-  executiveSummary: "Total emissions of 2,847 tCO₂e detected. EU ETS compliance status needs evaluation. Current carbon intensity is 0.45 tCO₂e/€M, showing moderate efficiency. Immediate action required for EU ETS compliance.",
+  executiveSummary: {
+    title: "Executive Summary",
+    content: "Total emissions of 2,847 tCO₂e detected. EU ETS compliance status needs evaluation. Current carbon intensity is 0.45 tCO₂e/€M, showing moderate efficiency. Immediate action required for EU ETS compliance.",
+    impact: "€47,000 additional cost for exceeding EU ETS allowances"
+  },
   financialImpact: "€47,000 additional cost for exceeding EU ETS allowances",
   recommendations: [
     {
@@ -250,17 +254,61 @@ export const mockLLMInsights = {
       priority: "Medium"
     }
   ],
-  riskAnalysis: [
-    {
-      title: "Regulatory Risk",
-      description: "EU ETS allowance deficit of 47 tCO₂e",
-      severity: "Medium",
-      probability: "High"
-    }
-  ],
+  riskAnalysis: {
+    title: "Risk Analysis",
+    content: "Based on current emission levels and EU ETS compliance status, several key risks have been identified that require immediate attention.",
+    risks: [
+      {
+        risk: "EU ETS Compliance Risk",
+        probability: "High",
+        impact: "€47,000 financial penalty",
+        mitigation: "Implement immediate emission reduction measures",
+        details: "Current emissions exceed allocated allowances by 47 tCO₂e, resulting in significant financial exposure. Immediate action required to avoid penalties."
+      },
+      {
+        risk: "Regulatory Changes",
+        probability: "Medium",
+        impact: "Increased compliance costs",
+        mitigation: "Monitor regulatory updates and adapt strategy",
+        details: "Potential tightening of EU ETS regulations could increase compliance costs and requirements."
+      },
+      {
+        risk: "Energy Price Volatility",
+        probability: "Medium",
+        impact: "Unpredictable operational costs",
+        mitigation: "Diversify energy sources and implement efficiency measures",
+        details: "Fluctuating energy prices could impact operational costs and emission reduction investments."
+      }
+    ]
+  },
   performanceMetrics: {
-    carbonIntensity: 0.45,
-    reductionTarget: 20,
-    currentProgress: 12
+    title: "Performance Metrics",
+    content: "Current performance metrics compared to industry benchmarks and internal targets.",
+    metrics: [
+      {
+        metric: "Carbon Intensity",
+        value: "0.45 tCO₂e/€M",
+        benchmark: "0.38 tCO₂e/€M",
+        status: "above"
+      },
+      {
+        metric: "Emission Reduction",
+        value: "12%",
+        benchmark: "15%",
+        status: "below"
+      },
+      {
+        metric: "Energy Efficiency",
+        value: "78%",
+        benchmark: "82%",
+        status: "below"
+      },
+      {
+        metric: "Renewable Energy",
+        value: "23%",
+        benchmark: "35%",
+        status: "below"
+      }
+    ]
   }
 };

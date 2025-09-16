@@ -3,41 +3,79 @@ import { api } from "../api.js";
 import { mockLLMInsights } from "../mockData.js";
 
 export default function LLMInsights() {
-  const [insights, setInsights] = useState(mockLLMInsights);
-  const [loading, setLoading] = useState(false);
+  const [insights, setInsights] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [expandedRisk, setExpandedRisk] = useState(null);
   const [expandedRecommendation, setExpandedRecommendation] = useState(null);
 
   useEffect(() => {
-    // Use mock data directly since MOCK flag is true
-    setLoading(false);
-    setError(null);
+    // Simulate loading for better UX
+    const timer = setTimeout(() => {
+      setInsights(mockLLMInsights);
+      setLoading(false);
+      setError(null);
+    }, 1500); // 1.5 second loading simulation
+
+    return () => clearTimeout(timer);
   }, []);
 
   // Handle both real API response (snake_case) and mock data (camelCase)
-  const executiveSummary = insights.executive_summary || insights.executiveSummary;
-  const keyRecommendations = insights.recommendations || insights.keyRecommendations;
-  const riskAnalysis = insights.risk_analysis || insights.riskAnalysis;
-  const performanceMetrics = insights.performance_metrics || insights.performanceMetrics;
+  const executiveSummary = insights?.executive_summary || insights?.executiveSummary;
+  const keyRecommendations = insights?.recommendations || insights?.keyRecommendations;
+  const riskAnalysis = insights?.risk_analysis || insights?.riskAnalysis;
+  const performanceMetrics = insights?.performance_metrics || insights?.performanceMetrics;
 
-  return (
-    <div className="llm-insights">
-      {/* Loading and Error States */}
-      {loading && (
+  // Show loading state
+  if (loading) {
+    return (
+      <div className="llm-insights">
         <div className="insight-card">
           <div style={{ textAlign: 'center', padding: '2rem' }}>
             <div style={{ fontSize: '1.125rem', color: '#16a34a', marginBottom: '0.5rem' }}>
               🤖 AI analizi yapılıyor...
             </div>
-            <div style={{ fontSize: '0.875rem', color: '#6b7280' }}>
+            <div style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '1rem' }}>
               LLM verilerinizi analiz ediyor ve öneriler hazırlıyor
+            </div>
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'center', 
+              alignItems: 'center',
+              gap: '0.5rem'
+            }}>
+              <div style={{
+                width: '8px',
+                height: '8px',
+                backgroundColor: '#16a34a',
+                borderRadius: '50%',
+                animation: 'pulse 1.5s ease-in-out infinite'
+              }}></div>
+              <div style={{
+                width: '8px',
+                height: '8px',
+                backgroundColor: '#16a34a',
+                borderRadius: '50%',
+                animation: 'pulse 1.5s ease-in-out infinite 0.2s'
+              }}></div>
+              <div style={{
+                width: '8px',
+                height: '8px',
+                backgroundColor: '#16a34a',
+                borderRadius: '50%',
+                animation: 'pulse 1.5s ease-in-out infinite 0.4s'
+              }}></div>
             </div>
           </div>
         </div>
-      )}
-      
-      {error && (
+      </div>
+    );
+  }
+
+  // Show error state
+  if (error) {
+    return (
+      <div className="llm-insights">
         <div className="insight-card" style={{ borderLeft: '4px solid #f59e0b' }}>
           <div style={{ color: '#f59e0b', fontWeight: '600', marginBottom: '0.5rem' }}>
             ⚠️ AI Analizi Uyarısı
@@ -46,7 +84,12 @@ export default function LLMInsights() {
             {error}
           </div>
         </div>
-      )}
+      </div>
+    );
+  }
+
+  return (
+    <div className="llm-insights">
 
               {/* Executive Summary */}
               <div className="insight-card priority-high">
