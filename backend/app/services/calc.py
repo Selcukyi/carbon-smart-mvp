@@ -1,7 +1,9 @@
 from typing import Dict, Any, List, Optional
 from datetime import date, timedelta
+import numpy as np
 from ..schemas.emission import EmissionPoint, ScopeShare, CategoryEmission, EmissionsResponse
 from ..schemas.compliance import AllowancePoint, PriceScenario, ComplianceResponse
+from ..schemas.intensity import IntensitySeriesPoint, IntensityScatterPoint, IntensityResponse
 from .mock_data import generate_time_series, get_mock_category_emissions
 
 
@@ -292,4 +294,149 @@ def _generate_price_scenarios(price_inputs: List[float], overshoot: float) -> Li
         ))
     
     return scenarios
+
+
+def calc_intensity(date_range: tuple[date, date], entities: Optional[List[int]] = None) -> IntensityResponse:
+    """
+    Calculate carbon intensity data for the given date range and entities.
+    
+    Args:
+        date_range: Tuple of (start_date, end_date)
+        entities: List of entity IDs to filter by (None for all)
+    
+    Returns:
+        IntensityResponse with intensity series, site scatter data, and correlation
+    """
+    start_date, end_date = date_range
+    
+    # Generate monthly intensity series
+    intensity_series = _generate_intensity_series(start_date, end_date)
+    
+    # Calculate current intensity (latest month)
+    current_intensity = intensity_series[-1].intensity if intensity_series else 0.0
+    
+    # Calculate YoY change
+    yoy_change_pct = _calculate_intensity_yoy_change(intensity_series)
+    
+    # Generate site-level scatter data
+    site_scatter = _generate_site_scatter_data()
+    
+    # Calculate correlation between revenue and emissions
+    correlation = _calculate_revenue_emissions_correlation(site_scatter)
+    
+    return IntensityResponse(
+        current_intensity=round(current_intensity, 2),
+        yoy_change_pct=round(yoy_change_pct, 1),
+        series=intensity_series,
+        site_scatter=site_scatter,
+        correlation=round(correlation, 3)
+    )
+
+
+def _generate_intensity_series(start_date: date, end_date: date) -> List[IntensitySeriesPoint]:
+    """Generate monthly intensity time series with realistic patterns"""
+    series = []
+    current_date = start_date.replace(day=1)  # Start from first day of month
+    
+    # Base intensity values (tCO₂e per €M revenue)
+    base_intensity = 2.5
+    seasonal_factor = 0.3
+    trend_factor = -0.02  # Slight downward trend
+    
+    month_count = 0
+    while current_date <= end_date:
+        # Add seasonal variation (higher in winter months)
+        seasonal = seasonal_factor * np.sin(2 * np.pi * current_date.month / 12)
+        
+        # Add trend
+        trend = trend_factor * month_count
+        
+        # Add some random noise
+        noise = np.random.normal(0, 0.1)
+        
+        intensity = base_intensity + seasonal + trend + noise
+        intensity = max(0.5, intensity)  # Ensure positive values
+        
+        series.append(IntensitySeriesPoint(
+            date=current_date,
+            intensity=round(intensity, 2)
+        ))
+        
+        # Move to next month
+        if current_date.month == 12:
+            current_date = current_date.replace(year=current_date.year + 1, month=1)
+        else:
+            current_date = current_date.replace(month=current_date.month + 1)
+        month_count += 1
+    
+    return series
+
+
+def _calculate_intensity_yoy_change(series: List[IntensitySeriesPoint]) -> float:
+    """Calculate year-over-year percentage change in intensity"""
+    if len(series) < 12:
+        return 0.0
+    
+    # Compare current year average to previous year average
+    current_year_avg = np.mean([point.intensity for point in series[-12:]])
+    previous_year_avg = np.mean([point.intensity for point in series[-24:-12]]) if len(series) >= 24 else current_year_avg
+    
+    if previous_year_avg == 0:
+        return 0.0
+    
+    return ((current_year_avg - previous_year_avg) / previous_year_avg) * 100
+
+
+def _generate_site_scatter_data() -> List[IntensityScatterPoint]:
+    """Generate site-level scatter plot data with realistic revenue-emissions relationship"""
+    sites = [
+        "Munich HQ", "Berlin Office", "Hamburg Plant", "Frankfurt Lab",
+        "Stuttgart Facility", "Cologne Branch", "Düsseldorf Center", "Leipzig Site"
+    ]
+    
+    scatter_data = []
+    base_revenue = 15.0  # Base revenue in M€
+    base_emissions = 35.0  # Base emissions in tCO₂e
+    
+    for i, site in enumerate(sites):
+        # Generate correlated revenue and emissions
+        revenue_factor = np.random.uniform(0.5, 2.0)
+        revenue_meur = base_revenue * revenue_factor
+        
+        # Emissions correlate with revenue but with some variation
+        correlation_factor = 0.8  # Strong positive correlation
+        noise_factor = np.random.uniform(0.7, 1.3)
+        emissions_factor = (correlation_factor * revenue_factor + (1 - correlation_factor)) * noise_factor
+        tco2e = base_emissions * emissions_factor
+        
+        # Calculate intensity
+        intensity = tco2e / revenue_meur if revenue_meur > 0 else 0
+        
+        scatter_data.append(IntensityScatterPoint(
+            site=site,
+            revenue_meur=round(revenue_meur, 1),
+            tco2e=round(tco2e, 1),
+            intensity=round(intensity, 2)
+        ))
+    
+    return scatter_data
+
+
+def _calculate_revenue_emissions_correlation(scatter_data: List[IntensityScatterPoint]) -> float:
+    """Calculate Pearson correlation between revenue and emissions"""
+    if len(scatter_data) < 2:
+        return 0.0
+    
+    revenues = [point.revenue_meur for point in scatter_data]
+    emissions = [point.tco2e for point in scatter_data]
+    
+    # Calculate Pearson correlation coefficient
+    correlation_matrix = np.corrcoef(revenues, emissions)
+    correlation = correlation_matrix[0, 1]
+    
+    # Handle NaN values
+    if np.isnan(correlation):
+        return 0.0
+    
+    return correlation
 
