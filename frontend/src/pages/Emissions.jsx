@@ -193,19 +193,100 @@ export default function Emissions() {
       <div className="page-header">
         <h1>Emissions Analysis</h1>
         <div className="filters">
-          <DateRangePicker
-            start={queryState.start}
-            end={queryState.end}
-            onChange={(start, end) => {
-              handleFilterChange('start', start);
-              handleFilterChange('end', end);
-            }}
-          />
-          <EntityMultiSelect
-            entities={entities}
-            selectedIds={queryState.entities.split(',').map(Number)}
-            onSelectionChange={(selectedIds) => handleFilterChange('entities', selectedIds.join(','))}
-          />
+          <div className="filter-section">
+            <label className="filter-label">📅 Date Range</label>
+            <div className="date-range-container">
+              <div className="date-inputs">
+                <div className="date-input-group">
+                  <input
+                    type="date"
+                    className="date-input"
+                    value={queryState.start}
+                    onChange={(e) => handleFilterChange('start', e.target.value)}
+                  />
+                </div>
+                <div className="date-separator">to</div>
+                <div className="date-input-group">
+                  <input
+                    type="date"
+                    className="date-input"
+                    value={queryState.end}
+                    onChange={(e) => handleFilterChange('end', e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="quick-date-buttons">
+                <button 
+                  className="quick-date-btn"
+                  onClick={() => {
+                    const today = new Date().toISOString().split('T')[0];
+                    handleFilterChange('start', today);
+                    handleFilterChange('end', today);
+                  }}
+                >
+                  Today
+                </button>
+                <button 
+                  className="quick-date-btn"
+                  onClick={() => {
+                    const end = new Date().toISOString().split('T')[0];
+                    const start = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+                    handleFilterChange('start', start);
+                    handleFilterChange('end', end);
+                  }}
+                >
+                  Last 7 days
+                </button>
+                <button 
+                  className="quick-date-btn"
+                  onClick={() => {
+                    const now = new Date();
+                    const start = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
+                    const end = new Date(now.getFullYear(), now.getMonth() + 1, 0).toISOString().split('T')[0];
+                    handleFilterChange('start', start);
+                    handleFilterChange('end', end);
+                  }}
+                >
+                  This month
+                </button>
+                <button 
+                  className="quick-date-btn"
+                  onClick={() => {
+                    const now = new Date();
+                    const quarter = Math.floor(now.getMonth() / 3);
+                    const start = new Date(now.getFullYear(), quarter * 3, 1).toISOString().split('T')[0];
+                    const end = new Date(now.getFullYear(), quarter * 3 + 3, 0).toISOString().split('T')[0];
+                    handleFilterChange('start', start);
+                    handleFilterChange('end', end);
+                  }}
+                >
+                  This quarter
+                </button>
+                <button 
+                  className="quick-date-btn"
+                  onClick={() => {
+                    const now = new Date();
+                    const start = new Date(now.getFullYear(), 0, 1).toISOString().split('T')[0];
+                    const end = new Date(now.getFullYear(), 11, 31).toISOString().split('T')[0];
+                    handleFilterChange('start', start);
+                    handleFilterChange('end', end);
+                  }}
+                >
+                  This year
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="filter-section">
+            <label className="filter-label">🏢 Select Entities</label>
+            <EntityMultiSelect
+              entities={entities}
+              selectedIds={queryState.entities.split(',').map(Number)}
+              onSelectionChange={(selectedIds) => handleFilterChange('entities', selectedIds.join(','))}
+            />
+          </div>
+
           <div className="toggle-group">
             <label className="toggle-label">
               <input
@@ -213,7 +294,10 @@ export default function Emissions() {
                 checked={queryState.pareto === 'true'}
                 onChange={handleParetoToggle}
               />
-              <span className="toggle-text">Pareto 80/20</span>
+              <div>
+                <span className="toggle-text">Pareto 80/20 Analysis</span>
+                <div className="toggle-description">Focus on top 20% of emission sources</div>
+              </div>
             </label>
           </div>
         </div>
