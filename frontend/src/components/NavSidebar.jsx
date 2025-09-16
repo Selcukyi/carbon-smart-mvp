@@ -53,6 +53,7 @@ export default function NavSidebar({ role = "ADMIN", isAuthenticated = true, onL
             {link("/", "Home")}
             {link("/dashboard", "Dashboard")}
             {link("/emissions", "Emissions")}
+            {link("/compliance", "Compliance")}
             {link("/upload", "Upload")}
             {link("/entities", "Entities")}
             {link("/allowances", "Allowances")}

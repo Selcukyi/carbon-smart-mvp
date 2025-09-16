@@ -1631,6 +1631,365 @@
   }
 }
 
+/* Compliance Page Styles */
+.kpi-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.kpi-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.kpi-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.kpi-value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.kpi-value.risk-green {
+  color: #22c55e;
+}
+
+.kpi-value.risk-yellow {
+  color: #f59e0b;
+}
+
+.kpi-value.risk-red {
+  color: #ef4444;
+}
+
+.kpi-unit {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.chart-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.chart-header h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.5rem 0;
+}
+
+.chart-header p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0 0 1.5rem 0;
+}
+
+.chart-container {
+  height: 300px;
+  width: 100%;
+}
+
+/* Price Input Styles */
+.price-inputs {
+  margin-bottom: 1.5rem;
+}
+
+.price-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.price-chip {
+  display: flex;
+  align-items: center;
+  background: var(--primary);
+  color: white;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  gap: 0.5rem;
+}
+
+.price-value {
+  cursor: pointer;
+  user-select: none;
+}
+
+.price-input {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+  width: 60px;
+  text-align: center;
+}
+
+.price-input:focus {
+  outline: none;
+}
+
+.price-remove {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.price-remove:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.price-remove:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.price-add {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.price-input-small {
+  background: var(--bg-primary);
+  border: 1px solid var(--border);
+  border-radius: 0.375rem;
+  padding: 0.375rem 0.5rem;
+  font-size: 0.875rem;
+  width: 80px;
+  text-align: center;
+}
+
+.price-input-small:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1);
+}
+
+.price-add-btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.price-add-btn:hover {
+  background: #16a34a;
+}
+
+/* Alert Controls */
+.alert-controls {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.alert-setting {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.alert-setting label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.threshold-input {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.threshold-slider {
+  width: 150px;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--border);
+  outline: none;
+  -webkit-appearance: none;
+}
+
+.threshold-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--primary);
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.threshold-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--primary);
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.threshold-value {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  min-width: 40px;
+  text-align: center;
+}
+
+/* Alert Toast */
+.alert-toast {
+  position: fixed;
+  top: 2rem;
+  right: 2rem;
+  z-index: 1000;
+  animation: slideInRight 0.3s ease-out;
+}
+
+.alert-content {
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 0.5rem;
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  max-width: 400px;
+}
+
+.alert-icon {
+  font-size: 1.25rem;
+}
+
+.alert-message {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #92400e;
+  flex: 1;
+}
+
+.alert-close {
+  background: none;
+  border: none;
+  color: #92400e;
+  cursor: pointer;
+  font-size: 1.25rem;
+  font-weight: bold;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+
+.alert-close:hover {
+  background: rgba(146, 64, 14, 0.1);
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .kpi-strip {
+    grid-template-columns: 1fr;
+  }
+  
+  .alert-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+  
+  .alert-setting {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  
+  .threshold-input {
+    justify-content: space-between;
+  }
+  
+  .alert-toast {
+    top: 1rem;
+    right: 1rem;
+    left: 1rem;
+  }
+  
+  .alert-content {
+    max-width: none;
+  }
+}
+
 /* Error States */
 .error-banner {
   display: flex;

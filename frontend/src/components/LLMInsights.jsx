@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { api } from "../api.js";
 import { mockLLMInsights } from "../mockData.js";
 
-export default function LLMInsights() {
+export default function LLMInsights({ context = "general" }) {
   const [insights, setInsights] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -12,13 +12,15 @@ export default function LLMInsights() {
   useEffect(() => {
     // Simulate loading for better UX
     const timer = setTimeout(() => {
-      setInsights(mockLLMInsights);
+      // Use different mock data based on context
+      const contextInsights = context === "compliance" ? getComplianceInsights() : mockLLMInsights;
+      setInsights(contextInsights);
       setLoading(false);
       setError(null);
     }, 1500); // 1.5 second loading simulation
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [context]);
 
   // Handle both real API response (snake_case) and mock data (camelCase)
   const executiveSummary = insights?.executive_summary || insights?.executiveSummary;
@@ -244,4 +246,104 @@ export default function LLMInsights() {
       </div>
     </div>
   );
+}
+
+// Compliance-specific insights
+function getComplianceInsights() {
+  return {
+    executiveSummary: {
+      title: "Compliance Summary",
+      content: "Current EU ETS compliance status shows significant overshoot of 329.82 tCO₂e, resulting in €28,199.61 in additional costs. Immediate action required to address allowance deficit and optimize carbon pricing strategy.",
+      impact: "€28,199.61 additional cost for exceeding EU ETS allowances"
+    },
+    recommendations: [
+      {
+        title: "Immediate Allowance Purchase",
+        description: "Purchase additional EU ETS allowances to cover current deficit",
+        impact: "High",
+        cost: "High",
+        savings: "€0",
+        annual_savings: "€0",
+        timeline: "1-2 weeks",
+        priority: "High"
+      },
+      {
+        title: "Emission Reduction Program",
+        description: "Implement rapid emission reduction measures to minimize future overshoot",
+        impact: "Very High",
+        cost: "Medium",
+        savings: "€15,000",
+        annual_savings: "€15,000",
+        timeline: "3-6 months",
+        priority: "High"
+      },
+      {
+        title: "Carbon Price Hedging",
+        description: "Implement hedging strategy to manage carbon price volatility",
+        impact: "Medium",
+        cost: "Low",
+        savings: "€5,000",
+        annual_savings: "€5,000",
+        timeline: "1-3 months",
+        priority: "Medium"
+      }
+    ],
+    riskAnalysis: {
+      title: "Compliance Risk Analysis",
+      content: "High-risk compliance situation with multiple financial and regulatory exposures requiring immediate attention.",
+      risks: [
+        {
+          risk: "EU ETS Penalty Risk",
+          probability: "High",
+          impact: "€28,199.61 immediate cost",
+          mitigation: "Purchase allowances immediately",
+          details: "Current overshoot of 329.82 tCO₂e exceeds allocated allowances, triggering immediate financial penalties at current market rates."
+        },
+        {
+          risk: "Price Volatility Exposure",
+          probability: "Medium",
+          impact: "€10,000-50,000 additional cost",
+          mitigation: "Implement hedging strategy",
+          details: "Carbon prices are volatile and could increase significantly, amplifying financial exposure beyond current estimates."
+        },
+        {
+          risk: "Regulatory Scrutiny",
+          probability: "Medium",
+          impact: "Increased compliance requirements",
+          mitigation: "Proactive compliance reporting",
+          details: "Persistent overshoot may trigger additional regulatory oversight and stricter compliance requirements."
+        }
+      ]
+    },
+    performanceMetrics: {
+      title: "Compliance Performance Metrics",
+      content: "Current compliance metrics compared to EU ETS requirements and industry benchmarks.",
+      metrics: [
+        {
+          metric: "Allowance Utilization",
+          value: "113.2%",
+          benchmark: "100%",
+          status: "above"
+        },
+        {
+          metric: "Cost per tCO₂e",
+          value: "€85.50",
+          benchmark: "€75.00",
+          status: "above"
+        },
+        {
+          metric: "Compliance Score",
+          value: "65%",
+          benchmark: "90%",
+          status: "below"
+        },
+        {
+          metric: "Risk Level",
+          value: "High",
+          benchmark: "Low",
+          status: "above"
+        }
+      ]
+    }
+  };
 }

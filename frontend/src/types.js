@@ -106,6 +106,28 @@
  * @property {Array<Object>} risks - Compliance risks
  */
 
+/**
+ * @typedef {Object} AllowancePoint
+ * @property {number} year - Year
+ * @property {number} allocated - Allocated allowances
+ * @property {number} actual - Actual emissions
+ * @property {number} over_by - Overshoot amount
+ */
+
+/**
+ * @typedef {Object} PriceScenario
+ * @property {number} price_eur - Price in EUR per tCO2e
+ * @property {number} exposure_eur - Financial exposure in EUR
+ */
+
+/**
+ * @typedef {Object} ComplianceResponse
+ * @property {number} current_overshoot_tco2e - Current overshoot in tCO2e
+ * @property {number} ytd_cost_eur - Year-to-date cost in EUR
+ * @property {Array<AllowancePoint>} allowances - Allowance points
+ * @property {Array<PriceScenario>} scenarios - Price scenarios
+ */
+
 // Export types for use in other files
 export const TYPES = {
   DateRange: 'DateRange',
@@ -120,5 +142,8 @@ export const TYPES = {
   AIExplainResponse: 'AIExplainResponse',
   QueryParams: 'QueryParams',
   Facility: 'Facility',
-  ComplianceStatus: 'ComplianceStatus'
+  ComplianceStatus: 'ComplianceStatus',
+  AllowancePoint: 'AllowancePoint',
+  PriceScenario: 'PriceScenario',
+  ComplianceResponse: 'ComplianceResponse'
 };

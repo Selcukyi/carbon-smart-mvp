@@ -207,4 +207,37 @@ export const api = {
     }
     return httpGet("/api/facilities");
   },
+
+  async getCompliance(start, end, entities, prices) {
+    if (FEATURE_FLAGS.MOCK) {
+      // Mock compliance data
+      const mockOvershoot = 329.82;
+      const mockYtdCost = 28199.61;
+      const mockPrices = prices || [90, 120, 150];
+      
+      return {
+        current_overshoot_tco2e: mockOvershoot,
+        ytd_cost_eur: mockYtdCost,
+        allowances: Array.from({ length: 12 }, (_, i) => ({
+          year: 2025,
+          allocated: 208.33,
+          actual: 200 + Math.random() * 100,
+          over_by: Math.max(0, (200 + Math.random() * 100) - 208.33)
+        })),
+        scenarios: mockPrices.map(price => ({
+          price_eur: price,
+          exposure_eur: mockOvershoot * price
+        }))
+      };
+    }
+    
+    const params = new URLSearchParams({
+      start,
+      end,
+      ...(entities && { entities: entities.join(',') }),
+      ...(prices && { prices: prices.join(',') })
+    });
+    
+    return httpGet(`/compliance?${params}`);
+  },
 };
