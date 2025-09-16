@@ -1,6 +1,7 @@
 from typing import Dict, Any, List, Optional
 from datetime import date, timedelta
 from ..schemas.emission import EmissionPoint, ScopeShare, CategoryEmission, EmissionsResponse
+from ..schemas.compliance import AllowancePoint, PriceScenario, ComplianceResponse
 from .mock_data import generate_time_series, get_mock_category_emissions
 
 
@@ -193,4 +194,102 @@ def pareto_80_20_cutoff(categories: List[CategoryEmission]) -> bool:
             return required_percentage <= 20
     
     return False
+
+
+def calc_compliance(date_range: tuple[date, date], entities: Optional[List[int]] = None, price_inputs: List[float] = [90, 120, 150]) -> ComplianceResponse:
+    """
+    Calculate compliance data for EU ETS allowances and cost scenarios.
+    
+    Args:
+        date_range: Tuple of (start_date, end_date)
+        entities: List of entity IDs to filter by (None for all)
+        price_inputs: List of price scenarios in EUR per tCO2e
+    
+    Returns:
+        ComplianceResponse with overshoot, costs, allowances, and scenarios
+    """
+    start_date, end_date = date_range
+    
+    # Calculate current emissions for the period
+    emissions_data = calc_emissions(date_range, entities, pareto=False)
+    current_emissions = emissions_data.summary["total_tco2e"]
+    
+    # Mock EU ETS allowance data for 2025
+    # In reality, this would come from a database or external API
+    allocated_allowances = _get_mock_allowances(start_date.year)
+    
+    # Calculate overshoot
+    current_overshoot = max(0, current_emissions - allocated_allowances)
+    
+    # Current EU ETS price (mock data - in reality from market API)
+    current_price = 85.5  # EUR per tCO2e
+    
+    # Calculate YTD cost
+    ytd_cost = current_overshoot * current_price
+    
+    # Generate allowance points for the year
+    allowances = _generate_allowance_points(start_date.year, allocated_allowances, current_emissions)
+    
+    # Generate price scenarios
+    scenarios = _generate_price_scenarios(price_inputs, current_overshoot)
+    
+    return ComplianceResponse(
+        current_overshoot_tco2e=round(current_overshoot, 2),
+        ytd_cost_eur=round(ytd_cost, 2),
+        allowances=allowances,
+        scenarios=scenarios
+    )
+
+
+def _get_mock_allowances(year: int) -> float:
+    """Get mock EU ETS allowances for the given year."""
+    # Mock allowance data - in reality this would come from EU ETS registry
+    allowance_data = {
+        2025: 2500.0,  # 2500 tCO2e allocated for 2025
+        2024: 2600.0,  # 2600 tCO2e allocated for 2024
+        2023: 2700.0   # 2700 tCO2e allocated for 2023
+    }
+    return allowance_data.get(year, 2500.0)
+
+
+def _generate_allowance_points(year: int, allocated: float, actual: float) -> List[AllowancePoint]:
+    """Generate allowance points for the year showing monthly progression."""
+    points = []
+    
+    # Distribute actual emissions across months (simplified)
+    monthly_actual = actual / 12
+    
+    for month in range(1, 13):
+        # Allocated allowances are typically distributed evenly
+        monthly_allocated = allocated / 12
+        
+        # Actual emissions with some monthly variation
+        monthly_variation = 0.8 + 0.4 * (month % 3) / 3  # Some seasonal variation
+        monthly_actual_emissions = monthly_actual * monthly_variation
+        
+        # Calculate overshoot for this month
+        monthly_overshoot = max(0, monthly_actual_emissions - monthly_allocated)
+        
+        points.append(AllowancePoint(
+            year=year,
+            allocated=round(monthly_allocated, 2),
+            actual=round(monthly_actual_emissions, 2),
+            over_by=round(monthly_overshoot, 2)
+        ))
+    
+    return points
+
+
+def _generate_price_scenarios(price_inputs: List[float], overshoot: float) -> List[PriceScenario]:
+    """Generate price scenarios with exposure calculations."""
+    scenarios = []
+    
+    for price in price_inputs:
+        exposure = overshoot * price
+        scenarios.append(PriceScenario(
+            price_eur=price,
+            exposure_eur=round(exposure, 2)
+        ))
+    
+    return scenarios
 
