@@ -30,17 +30,36 @@ const mock = {
   },
   async emissionsSummary() {
     return {
-      total_kg: 150000 * 0.42 + 30000 * 1.9 + 20000 * 2.68 + 120000 * 0.12,
-      totals_by_scope: { Scope1: 30000 * 1.9 + 20000 * 2.68, Scope2: 150000 * 0.42, Scope3: 120000 * 0.12 },
-      items: [
-        { activity_id: 1, scope: "Scope2", co2e_kg: 150000 * 0.42, period: "2025-Q3" },
-        { activity_id: 2, scope: "Scope1", co2e_kg: 30000 * 1.9, period: "2025-Q3" },
-        { activity_id: 3, scope: "Scope1", co2e_kg: 20000 * 2.68, period: "2025-Q3" },
-        { activity_id: 4, scope: "Scope3", co2e_kg: 120000 * 0.12, period: "2025-Q3" },
+      summary: {
+        total_tco2e: 2773.55,
+        yoy_pct: 12.3
+      },
+      series: [
+        { date: "2025-01-01", tco2e: 244.27 },
+        { date: "2025-02-01", tco2e: 264.48 },
+        { date: "2025-03-01", tco2e: 244.8 },
+        { date: "2025-04-01", tco2e: 203.09 },
+        { date: "2025-05-01", tco2e: 227.84 },
+        { date: "2025-06-01", tco2e: 214.4 },
+        { date: "2025-07-01", tco2e: 171.52 },
+        { date: "2025-08-01", tco2e: 204.91 },
+        { date: "2025-09-01", tco2e: 206.4 },
+        { date: "2025-10-01", tco2e: 226.99 },
+        { date: "2025-11-01", tco2e: 238.93 },
+        { date: "2025-12-01", tco2e: 325.92 }
       ],
-      page: 1,
-      size: 10,
-      total: 4,
+      scopes: [
+        { scope: "Scope 1", tco2e: 1109.42, pct: 40.0 },
+        { scope: "Scope 2", tco2e: 970.74, pct: 35.0 },
+        { scope: "Scope 3", tco2e: 693.39, pct: 25.0 }
+      ],
+      top_categories: [
+        { category: "Energy Consumption", tco2e: 1200.5 },
+        { category: "Transportation", tco2e: 800.3 },
+        { category: "Manufacturing", tco2e: 600.7 },
+        { category: "Waste Disposal", tco2e: 147.0 },
+        { category: "Business Travel", tco2e: 99.0 }
+      ]
     };
   },
   async euETSPrice() {
