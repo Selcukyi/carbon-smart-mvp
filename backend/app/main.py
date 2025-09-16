@@ -9,6 +9,8 @@ from .routes import emissions as emissions_routes
 from .routes import allowances as allowances_routes
 from .routes import eu_ets as eu_ets_routes
 from .routes import llm as llm_routes
+from .routes import compliance as compliance_routes
+from .routes import intensity as intensity_routes
 
 
 def create_app() -> FastAPI:
@@ -16,7 +18,7 @@ def create_app() -> FastAPI:
 
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"],
+        allow_origins=["http://localhost:5173", "https://carbon-smart-mvp.vercel.app"],
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
@@ -30,6 +32,8 @@ def create_app() -> FastAPI:
     app.include_router(allowances_routes.router)
     app.include_router(eu_ets_routes.router)
     app.include_router(llm_routes.router)
+    app.include_router(compliance_routes.router)
+    app.include_router(intensity_routes.router)
 
     return app
 

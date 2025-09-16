@@ -113,4 +113,79 @@ export const api = {
     if (FEATURE_FLAGS.MOCK) return { success: true, data: mockLLMInsights };
     return httpPost("/api/llm/analyze-custom-data", data);
   },
+
+  // New API endpoints for shared groundwork
+  async getEmissions(params = {}) {
+    if (FEATURE_FLAGS.MOCK) return mock.emissionsSummary();
+    const q = new URLSearchParams(params).toString();
+    return httpGet(`/api/emissions?${q}`);
+  },
+
+  async getCompliance(params = {}) {
+    if (FEATURE_FLAGS.MOCK) {
+      return {
+        eu_ets_status: "over_limit",
+        eu_ets_deficit: 47.0,
+        iso_14064_status: "compliant",
+        ghg_protocol_status: "compliant",
+        next_audit_date: "2025-06-15",
+        compliance_score: 85.5,
+        risks: [
+          { type: "regulatory", severity: "medium", description: "EU ETS allowance deficit" },
+          { type: "operational", severity: "low", description: "Energy efficiency opportunities" }
+        ]
+      };
+    }
+    const q = new URLSearchParams(params).toString();
+    return httpGet(`/api/compliance?${q}`);
+  },
+
+  async getIntensity(params = {}) {
+    if (FEATURE_FLAGS.MOCK) {
+      return {
+        data: [
+          { date: "2025-01-01", intensity: 0.45, revenue: 50000, emissions: 100 },
+          { date: "2025-01-02", intensity: 0.44, revenue: 52000, emissions: 102 },
+          { date: "2025-01-03", intensity: 0.43, revenue: 48000, emissions: 98 }
+        ],
+        summary: {
+          average_intensity: 0.44,
+          trend: "decreasing",
+          target: 0.3
+        }
+      };
+    }
+    const q = new URLSearchParams(params).toString();
+    return httpGet(`/api/intensity?${q}`);
+  },
+
+  async getAIExplain(context, params = {}) {
+    if (FEATURE_FLAGS.MOCK) {
+      return {
+        explanation: `Based on the ${context} data, your carbon emissions show a stable trend. Key insights include energy efficiency opportunities and potential cost savings through renewable energy adoption.`,
+        confidence: 0.87,
+        sources: ["EU ETS Database", "GHG Protocol Guidelines", "Internal Energy Reports"],
+        recommendations: [
+          "Implement LED lighting systems",
+          "Switch to renewable energy sources",
+          "Optimize transportation routes",
+          "Invest in energy-efficient equipment"
+        ]
+      };
+    }
+    return httpPost("/api/llm/explain", { context, params });
+  },
+
+  async getFacilities() {
+    if (FEATURE_FLAGS.MOCK) {
+      return [
+        { id: 1, name: "Istanbul Headquarters", city: "Istanbul", country: "Turkey" },
+        { id: 2, name: "Izmir Manufacturing", city: "Izmir", country: "Turkey" },
+        { id: 3, name: "Ankara Office", city: "Ankara", country: "Turkey" },
+        { id: 4, name: "Bursa Factory", city: "Bursa", country: "Turkey" },
+        { id: 5, name: "Antalya Branch", city: "Antalya", country: "Turkey" }
+      ];
+    }
+    return httpGet("/api/facilities");
+  },
 };
