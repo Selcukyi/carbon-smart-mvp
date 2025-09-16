@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { api } from "../api.js";
 import { mockLLMInsights } from "../mockData.js";
 
-export default function LLMInsights({ context = "general" }) {
+export default function LLMInsights({ context = "general", data = null }) {
   const [insights, setInsights] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -10,23 +10,52 @@ export default function LLMInsights({ context = "general" }) {
   const [expandedRecommendation, setExpandedRecommendation] = useState(null);
 
   useEffect(() => {
-    // Simulate loading for better UX
-    const timer = setTimeout(() => {
-      // Use different mock data based on context
-      const contextInsights = context === "compliance" 
-        ? getComplianceInsights() 
-        : context === "intensity" 
-        ? getIntensityInsights() 
-        : mockLLMInsights;
-      setInsights(contextInsights);
-      setLoading(false);
+    const loadInsights = async () => {
+      setLoading(true);
       setError(null);
-    }, 1500); // 1.5 second loading simulation
+      
+      try {
+        // Try to get real LLM insights if data is provided
+        if (data && context !== "general") {
+          try {
+            const response = await api.getLLMExplain(context, data);
+            setInsights({
+              summary: response.summary,
+              actions: response.actions
+            });
+            setLoading(false);
+            return;
+          } catch (apiError) {
+            console.warn("LLM API failed, using fallback:", apiError);
+          }
+        }
+        
+        // Fallback to mock data
+        const contextInsights = context === "compliance" 
+          ? getComplianceInsights() 
+          : context === "intensity" 
+          ? getIntensityInsights() 
+          : mockLLMInsights;
+        setInsights(contextInsights);
+      } catch (err) {
+        console.error("Failed to load insights:", err);
+        setError("Failed to load AI insights");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    return () => clearTimeout(timer);
-  }, [context]);
+    loadInsights();
+  }, [context, data]);
 
-  // Handle both real API response (snake_case) and mock data (camelCase)
+  // Handle both new structured response and legacy mock data
+  const isStructuredResponse = insights?.summary && insights?.actions;
+  
+  // For structured response (new API)
+  const summary = insights?.summary;
+  const actions = insights?.actions || [];
+  
+  // For legacy mock data (fallback)
   const executiveSummary = insights?.executive_summary || insights?.executiveSummary;
   const keyRecommendations = insights?.recommendations || insights?.keyRecommendations;
   const riskAnalysis = insights?.risk_analysis || insights?.riskAnalysis;
@@ -96,34 +125,100 @@ export default function LLMInsights({ context = "general" }) {
 
   return (
     <div className="llm-insights">
-
-              {/* Executive Summary */}
-              <div className="insight-card priority-high">
-                <div className="insight-header">
-                  <h3>{executiveSummary?.title || "Executive Summary"}</h3>
-                  <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-                    <button
-                      onClick={() => {}}
-                      disabled={loading}
-                      className="btn btn-sm"
-                      style={{
-                        fontSize: '0.75rem',
-                        padding: '0.25rem 0.5rem',
-                        opacity: loading ? 0.6 : 1
-                      }}
-                    >
-                      {loading ? 'Yenileniyor...' : '🔄 Yenile'}
-                    </button>
-                    <div className="priority-badge high">High Priority</div>
-                  </div>
-                </div>
-                <div className="insight-content">
-                  <p>{executiveSummary?.content || executiveSummary?.executive_summary || "AI analizi yükleniyor..."}</p>
-                  <div className="impact-highlight">
-                    <strong>Financial Impact:</strong> {executiveSummary?.impact || executiveSummary?.financial_impact || "Hesaplanıyor..."}
-                  </div>
-                </div>
+      {isStructuredResponse ? (
+        // New structured response
+        <>
+          {/* AI Summary */}
+          <div className="insight-card priority-high">
+            <div className="insight-header">
+              <h3>AI Analysis</h3>
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                <button
+                  onClick={() => window.location.reload()}
+                  className="btn btn-sm"
+                  style={{
+                    fontSize: '0.75rem',
+                    padding: '0.25rem 0.5rem'
+                  }}
+                >
+                  🔄 Refresh
+                </button>
+                <div className="priority-badge high">AI Generated</div>
               </div>
+            </div>
+            <div className="insight-content">
+              <p>{summary}</p>
+            </div>
+          </div>
+
+          {/* Action Items */}
+          {actions.length > 0 && (
+            <div className="insight-card">
+              <div className="insight-header">
+                <h3>Recommended Actions</h3>
+              </div>
+              <div className="insight-content">
+                <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                  {actions.map((action, index) => (
+                    <li key={index} style={{ 
+                      marginBottom: '0.75rem',
+                      padding: '0.75rem',
+                      backgroundColor: '#f8fafc',
+                      borderRadius: '6px',
+                      borderLeft: '3px solid #3b82f6'
+                    }}>
+                      <div style={{ 
+                        display: 'flex', 
+                        alignItems: 'flex-start',
+                        gap: '0.5rem'
+                      }}>
+                        <span style={{ 
+                          color: '#3b82f6',
+                          fontWeight: '600',
+                          fontSize: '0.875rem',
+                          minWidth: '20px'
+                        }}>
+                          {index + 1}.
+                        </span>
+                        <span style={{ fontSize: '0.875rem', lineHeight: '1.5' }}>
+                          {action}
+                        </span>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
+        </>
+      ) : (
+        // Legacy mock data response
+        <>
+          {/* Executive Summary */}
+          <div className="insight-card priority-high">
+            <div className="insight-header">
+              <h3>{executiveSummary?.title || "Executive Summary"}</h3>
+              <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                <button
+                  onClick={() => window.location.reload()}
+                  className="btn btn-sm"
+                  style={{
+                    fontSize: '0.75rem',
+                    padding: '0.25rem 0.5rem'
+                  }}
+                >
+                  🔄 Refresh
+                </button>
+                <div className="priority-badge high">High Priority</div>
+              </div>
+            </div>
+            <div className="insight-content">
+              <p>{executiveSummary?.content || executiveSummary?.executive_summary || "AI analizi yükleniyor..."}</p>
+              <div className="impact-highlight">
+                <strong>Financial Impact:</strong> {executiveSummary?.impact || executiveSummary?.financial_impact || "Hesaplanıyor..."}
+              </div>
+            </div>
+          </div>
 
       {/* Key Recommendations */}
       <div className="insight-card">
@@ -248,6 +343,8 @@ export default function LLMInsights({ context = "general" }) {
           </div>
         </div>
       </div>
+        </>
+      )}
     </div>
   );
 }

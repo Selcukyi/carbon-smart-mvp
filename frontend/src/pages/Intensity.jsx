@@ -309,7 +309,7 @@ export default function Intensity() {
       </div>
 
       {/* LLM Insights */}
-      <LLMInsights context="intensity" />
+      <LLMInsights context="intensity" data={intensityData} />
     </div>
   );
 }

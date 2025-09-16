@@ -368,7 +368,7 @@ export default function Compliance() {
       </div>
 
       {/* LLM Insights */}
-      <LLMInsights context="compliance" />
+      <LLMInsights context="compliance" data={complianceData} />
     </div>
   );
 }

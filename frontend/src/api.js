@@ -291,4 +291,51 @@ export const api = {
     
     return httpGet(`/intensity?${params}`);
   },
+
+  async getLLMExplain(context, data) {
+    if (FEATURE_FLAGS.MOCK) {
+      // Mock LLM explain response
+      const mockResponses = {
+        overview: {
+          summary: "Carbon emissions analysis shows opportunities for improvement across all scopes. Focus on energy efficiency and renewable energy adoption to achieve reduction targets.",
+          actions: [
+            "Implement energy efficiency programs",
+            "Optimize supply chain operations",
+            "Set reduction targets for 2025"
+          ]
+        },
+        emissions: {
+          summary: "Emissions data indicates significant reduction potential in Scope 1 and 2 activities. Implement energy efficiency programs and renewable energy sources.",
+          actions: [
+            "Upgrade to renewable energy sources",
+            "Improve manufacturing efficiency",
+            "Implement waste reduction programs"
+          ]
+        },
+        compliance: {
+          summary: "EU ETS compliance requires immediate action to address allowance deficit. Consider purchasing additional allowances and implementing rapid emission reductions.",
+          actions: [
+            "Purchase additional allowances",
+            "Implement rapid emission reductions",
+            "Review compliance strategy"
+          ]
+        },
+        intensity: {
+          summary: "Carbon intensity metrics show room for improvement in operational efficiency. Optimize production processes and improve energy management systems.",
+          actions: [
+            "Optimize production processes",
+            "Improve energy management",
+            "Decouple growth from emissions"
+          ]
+        }
+      };
+      
+      return mockResponses[context] || mockResponses.overview;
+    }
+    
+    return httpPost('/api/llm/explain', {
+      context,
+      data
+    });
+  },
 };
